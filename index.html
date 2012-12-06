@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Bigfile by jkroso</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Bigfile</h1>
+        <p>A build tool designed to make a single, browser compatable, file out of your front end project</p>
+
+        <p class="view"><a href="https://github.com/jkroso/BigFile">View the Project on GitHub <small>jkroso/BigFile</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/jkroso/BigFile/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/jkroso/BigFile/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/jkroso/BigFile">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h3>welcome</h3>
+
+<p>This project is an experiment born out of frustration trying to write and consume modular code. JS is a language which offers no support for modules. At first this seems like a weakness since all other mainstream languages do. However I have come to see this as a strength and an opportunity. I think its possible to implement a first class module system for the web. Now if you know your JS you know a native module system is on its way. However I think they are unlikely to amount to much more than syntactic sugar since I see no plans to deal with network latency. BigFile will easily allow you to author in the new format and integrate those modules with the rest of your project.</p>
+
+<h3>State of modules</h3>
+
+<p>Their are only really two module formats in popular use AMD and the node flavour of CJS. AMD is better for the web while CJS is simpler and so is more popular on the server. The differences are actually fairly inconsequential though since in production projects are compiled anyway. By compiled I mean concatenated in to just a few big files. Sometimes async loading is desirable in which case AMD is easier but mostly because it has better tooling available for the job. CJS converts easily to AMD in any case. Your choose of module format is largely irrelevent when it comes to managing JS. However, the web is more than just JS. To make anything for the web you probably want to make use of HTML and CSS at the very least (I say probably because you could in fact only use JS, apart from the initial bit of HTML needed to load the JS). There are many many more languages which compile to be used on the web now too. In my opinion the interaction between languages is weak. And its due to a poor build time tooling.</p>
+
+<h3>Lament</h3>
+
+<p>A module by definition is a unit. Its one conceptual thing. There boundary is usaully defined by a job to be done. Consuming a module should be a matter of grabbing a hold of it and telling it to do its thing. That means if a module requires you to load some JS then some CSS and HTML it is not a module. Its hard to think of it as one thing since to grab it you grab its contents. This feels weird looks weird and is error prone. </p>
+
+<h3>General quams</h3>
+
+<ol>
+<li>Access via magic
+npm uses a central repository to hold all modules and uses names as ids to grab them. So the person reading your code must know which module system you are using in order to work out what code you are depending on. Then they must look into the meta data file to see which version. This is a pain for users and adds complexity to the tooling. The only thing needed to grab a module should be its location. i.e. a path or url. AMD is the only system I know of which embraces this idea.</li>
+<li>
+<a href="https://npmjs.org/%7Eflashsoft">Namesquating</a> 
+It defeats the few merits of using magic names when producers can't pick the name they want.</li>
+</ol><h3>Specific quams</h3>
+
+<p>Many tools have been designed to address issues around front end code reuse and modularisation. This is not a complete list but as much as I can remember of the top of my head. It is through an unfortunate process of elimination that I ended up writing this tool. Hopefully you agree it has potential.</p>
+
+<ul>
+<li>AMD<br>
+Requires complex tooling to do anything above plain JS loading. This opinion is based on current implementations not on principle. I used AMD for everything until one day I got fed up by its complexity.</li>
+<li>
+<a href="https://github.com/substack/node-browserify">Browserify</a><br>
+Inflexible; only works with cjs formated JS/coffeescript</li>
+<li>
+<a href="https://github.com/medikoo/modules-webmake">Webmake</a><br>
+As above</li>
+<li>
+<a href="http://mixu.net/gluejs/">Glue</a><br>
+Very flexible but its intended primarily for small packages. It struggles with external dependencies (at least I couldn't get it working properly). My work is heavily inspired by Glue.</li>
+<li>
+<a href="https://component.jit.su">component/component</a><br>
+I dislike all the meta data files. They feel uneccesarry and error prone but a promising ecosystem is evolving. It looks like it might offer a nice transition to the upcoming native HTML components.</li>
+<li>
+<a href="http://yeoman.io/">Yeoman</a><br>
+He'll make you organise you project by language which to me is like organising a supermarket by color.</li>
+<li>
+<a href="https://github.com/testdouble/lineman">lineman</a><br>
+As above</li>
+<li>
+<a href="https://github.com/airportyh/geartrain">Geartrain</a><br>
+You have to write your code a certain way to use it</li>
+<li>
+<a href="https://github.com/One-com/assetgraph">AssetGraph</a><br>
+This might be good but I don't understand it. I didn't give it much time because I got the impression it was designed for making websites and wouldn't be good for apps.</li>
+</ul><p>The main issue I have with these package managers is the buy in they require with the exception of Glue. They leave little room to solve problems when you run in to them.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/jkroso">jkroso</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
