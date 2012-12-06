@@ -18,11 +18,15 @@ var BigFile = require('bigfile')
 
 ```javascript
 new BigFile()
+	// tell big file what to do with javascript files. In this case nothing
     .handle(/\.js$/, function (file) {
     	return file
     })
+    // give it a file to include in the build. It dependencies will be traced
     .include(resolve(__dirname, './src/index.js'))
+    // If you want to use the product of your main file from the global namespace
     .export('A_Global_if_you_wish')
+    // When done with config call ender to have your bigfile made
     .render(function(text) {
     	// Put the text where you please
         res.write(text)
