@@ -30,7 +30,7 @@
       <section>
         <h3>welcome</h3>
 
-<p>This project is an experiment born out of frustration trying to write and consume modular code. JS is a language which offers no support for modules. At first this seems like a weakness since all other mainstream languages do. However I have come to see this as a strength and an opportunity. I think its possible to implement a first class module system for the web. Now if you know your JS you know a native module system is on its way. However I think they are unlikely to amount to much more than syntactic sugar since I see no plans to deal with network latency. BigFile will easily allow you to author in the new format and integrate those modules with the rest of your project.</p>
+<p>This project is an experiment born out of frustration trying to write and consume modular code. JS is a language which offers no support for modules. At first this seems like a weakness since all other mainstream languages do. However I have come to see this as a strength and an opportunity. I think its possible to implement a first class module system for the web. Now if you know your JS you know a native module system is on its way. However I think it is unlikely to amount to much more than syntactic sugar since I see no plans to deal with network latency. BigFile will easily allow you to author in the new format and integrate those modules with the rest of your project.</p>
 
 <h3>State of modules</h3>
 
@@ -80,6 +80,14 @@ You have to write your code a certain way to use it</li>
 <a href="https://github.com/One-com/assetgraph">AssetGraph</a><br>
 This might be good but I don't understand it. I didn't give it much time because I got the impression it was designed for making websites and wouldn't be good for apps.</li>
 </ul><p>The main issue I have with these package managers is the buy in they require with the exception of Glue. They leave little room to solve problems when you run in to them.</p>
+
+<h3>A better way</h3>
+
+<p>The first key decision I think we need to make is to use urls to require modules. Urls have proven themselves robust and are widely understood. There are two obvious rebutals people might have with this idea. Code size due to all the long strings. Readablity, due to all the extra info in urls you don't need to know. I'll start with code size since its the easiest to answer. Build it out. <code>require('http://code.jquery.com/jquery.js')</code> could become <code>require(0)</code> in production code very easily or for that matter <code>r(0)</code>. Meanwhile the readablity thing is something to solve within you code editor, through a plugin maybe. Your code editor should be able to present this to you <code>require(dom/manipulator)</code> in place of the url. It will do this because in your list of familiar modules this is how you catagorized jquery. I think their is a lot of cool things you can do once you start personalising things from the code editor side but for the sake of this discussion I think all I need to say is that it would be fairly easy to make things as readable as they currently are with magic module names of today.</p>
+
+<h3>Legacy support</h3>
+
+<p>Thanks to the powers of the flexible dependecy resolution tool <a href="https://github.com/jkroso/SourceGraph">SourceGraph</a> it is fairly easy to pull together code from other systems like npm or component/component. BigFile then offers a feature taken from Glue called handlers which allows to hook into the files of your choosing through Regex and transform their content via a function. Out of the box BigFile allows you to build projects containing JS, CSS, and handlebars templates which can be drawn from proper paths and/or the magic paths of node and component/component. </p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/jkroso">jkroso</a></p>
