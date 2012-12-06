@@ -1,0 +1,6 @@
+{
+	"name": "withdep",
+	"dependencies": {
+		"component/inherit": "*"
+	}
+}

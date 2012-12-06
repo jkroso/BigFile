@@ -1,0 +1,6 @@
+{
+	"name" : "severaldeps",
+	"dependencies": {
+		"animal": "*"
+	}
+}

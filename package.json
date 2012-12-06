@@ -1,0 +1,43 @@
+{
+  "name": "bigfile",
+  "version": "0.1.0",
+  "description": "Turn a mapping of modules into a browser suitable package. A build tool then.",
+  "main": "src/index.js",
+  "directories": {
+    "src": "src"
+  },
+  "bin": {
+    "bigfile": "bin/bigfile"
+  },
+  "devDependencies": {
+    "chai": "*",
+    "mocha": "*"
+  },
+  "scripts": {
+    "test": "mocha -R spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jkroso/Big File.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jkroso/Big File/issues"
+  },
+  "keywords": [
+    "build",
+    "compile",
+    "module",
+    "js",
+    "cjs",
+    "package"
+  ],
+  "author": "Jakeb Rosoman",
+  "license": "MIT",
+  "dependencies": {
+    "uglify-js": "",
+    "commander": "",
+    "hashish": "",
+    "handlebars": "",
+    "colors": ""
+  }
+}
