@@ -19,7 +19,7 @@ function require (path, parent){
 			'exports', 
 			'require', 
 			// Eval prevents the function wrapper being visible
-			module+'\n//@ sourceURL='+path
+			"eval("+JSON.stringify(module+'\n//@ sourceURL='+encodeURI(path))+")"
 		)
 		// var constructor = new Function('module', 'exports', 'require', module)
 		modules[path] = module = {exports:{}}
