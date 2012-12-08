@@ -14,18 +14,23 @@ function require (path, parent){
 	if (!module) throw new Error('failed to require "'+path+'" from '+parent)
 	// It hasn't been loaded before
 	if (typeof module === 'string') {
-		var constructor = new Function(
+		new Function(
 			'module', 
 			'exports', 
 			'require', 
 			// Eval prevents the function wrapper being visible
 			"eval("+JSON.stringify(module+'\n//@ sourceURL='+encodeURI(path))+")"
+			// module
 		)
-		// var constructor = new Function('module', 'exports', 'require', module)
-		modules[path] = module = {exports:{}}
-		constructor.call(module.exports, module, module.exports, relative(path))
+		.call((modules[path] = module = {exports:{}}).exports, 
+		    module, 
+		    module.exports, 
+			// Relative require function
+		    function (relp) {
+				return require('.' === relp[0] ? join(path, relp) : relp, path)
+			}
+		)
 	}
-	// if (!module.exports) module.exports = {}
 	return module.exports
 }
 
@@ -85,18 +90,6 @@ var checks = [
         })[0]
     }
 ]
-
-/**
- * Return a require function relative to the `relativeTo` path.
- *
- * @param {String} relativeTo
- * @return {Function}
- */
-function relative (relativeTo) {
-	return function(path){
-		return require('.' === path[0] ? join(relativeTo, path) : path, relativeTo)
-	}
-}
 
 function join (a, b) { 
 	var path = a.split('/').slice(0, -1),
