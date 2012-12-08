@@ -33,11 +33,14 @@
       <section id="main_content" class="inner">
         <h3>welcome</h3>
 
-<p>This project is an experiment born out of frustration trying to write and consume modular code. JS is a language which offers no support for modules. At first this seems like a weakness since all other mainstream languages do. However I have come to see this as a strength and an opportunity. I think its possible to implement a first class module system for the web. Now if you know your JS you know a native module system is on its way. However I think it is unlikely to amount to much more than syntactic sugar since I see no plans to deal with network latency. BigFile will easily allow you to author in the new format and integrate those modules with the rest of your project.</p>
+<p>This project is an experiment born out of frustration trying to write and consume modular code. JS is a language which offers no support for modules. At first this seems like a weakness, however I have come to see this as a strength. In filling the void we have seen the flexible common JS (CJS) format take hold on the server and AMD on the web. And now finally language designers are looking to implement a <a href="http://wiki.ecmascript.org/doku.php?id=harmony:modules">native system</a>. However, the only thing we can really hope to gain from it now is syntactic abstraction. i.e. network latency will continue to be a problem.<br>
+One solution to dealing with network latency is to compile modules together into big files. You might be able to take a guess at what this project does considering its name then. Another, and better solution, is to continue to load files individually but cache them on the client since users won't have to reload code they already have as often.<br>
+However, in any case their is merit to having a build step in between code you author and code you publish. This project aims to provide those merits in a flexible framework. BigFile allows you to pull together divers code bases. That diversity might come through differing module formats or languages.<br>
+Think its a bad idea to author in more than one language? You only need to venture as far as HTML and CSS to enjoy the benefits BigFile provides over simple concatenation.</p>
 
 <h3>State of modules</h3>
 
-<p>Their are only really two module formats in popular use AMD and the node flavor of CJS. AMD is better for the web while CJS is simpler and so is more popular on the server. The differences are actually fairly inconsequential though since in production projects are compiled anyway. By compiled I mean concatenated in to just a few big files. Sometimes async loading is desirable in which case AMD is easier but mostly because it has better tooling available for the job. CJS converts easily to AMD in any case. Your choose of module format is largely irrelevant when it comes to managing JS. However, the web is more than just JS. To make anything for the web you probably want to make use of HTML and CSS at the very least (I say probably because you could in fact only use JS, apart from the initial bit of HTML needed to load the JS). There are many many more languages which compile to be used on the web now too. In my opinion the interaction between languages is weak. And its due to a poor build time tooling.</p>
+<p>Their are only really two module formats in popular use AMD and the node flavour of CJS. AMD is better for the web while CJS is simpler and so is more popular on the server. The differences are actually fairly inconsequential though since in production projects are compiled anyway. By compiled I mean concatenated in to just a few big files. Sometimes async loading is desirable in which case AMD is easier but mostly because it has better tooling available for the job. CJS converts easily to AMD in any case. Your choose of module format is largely irrelevant when it comes to managing JS. However, the web is more than just JS. To make anything for the web you probably want to make use of HTML and CSS at the very least (I say probably because you could in fact only use JS, apart from the initial bit of HTML needed to load the JS). There are many many more languages which compile to be used on the web now too. In my opinion the interaction between languages is weak. And its due to a poor build time tooling.</p>
 
 <h3>Lament</h3>
 
@@ -69,7 +72,7 @@ As above</li>
 As above</li>
 <li>
 <a href="https://github.com/stagas/frequire">frequire</a><br>
-I wasn't aware of this project before I wrote this</li>
+I wasn't aware of this project till after I wrote this one. Its designed to support node modules and components but seems to depend on a lot of per project config to do it (a problem I had with Glue). It does a lot but is about as flexible as concrete.</li>
 <li>
 <a href="http://mixu.net/gluejs/">Glue</a><br>
 Very flexible but its intended primarily for small packages. It struggles with external dependencies (at least I couldn't get it working properly). My work is heavily inspired by Glue.</li>
@@ -96,7 +99,7 @@ This might be good but I don't understand it. I didn't give it much time because
 
 <h3>Legacy support</h3>
 
-<p>Thanks to the powers of the flexible dependency resolution tool <a href="https://github.com/jkroso/SourceGraph">SourceGraph</a> it is fairly easy to pull together code from other systems like npm or component/component. BigFile then offers a feature taken from Glue called handlers which allows to hook into the files of your choosing through Regexp and transform their content via a function. Out of the box BigFile allows you to build projects containing JS, CSS, and handlebars templates which can be drawn from proper paths and/or the magic paths of node and component/component. </p>
+<p>Thanks to the powers of the flexible dependency resolution tool <a href="https://github.com/jkroso/SourceGraph">SourceGraph</a> it is fairly easy to pull together code from other systems like npm or component/component. BigFile then offers a feature taken from Glue called handlers which allows to hook into the files of your choosing through Regex and transform their content via a function. Out of the box BigFile allows you to build projects containing JS, CSS, and handlebars templates which can be drawn from proper paths and/or the magic paths of node and component/component. </p>
       </section>
     </div>
 
