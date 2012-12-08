@@ -1,33 +1,36 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Bigfile by jkroso</title>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Bigfile : A build tool designed to make a single, browser compatable, file out of your front end project" />
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Bigfile</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>Bigfile</h1>
-        <p>A build tool designed to make a single, browser compatable, file out of your front end project</p>
 
-        <p class="view"><a href="https://github.com/jkroso/BigFile">View the Project on GitHub <small>jkroso/BigFile</small></a></p>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/jkroso/BigFile">View on GitHub</a>
 
+          <h1 id="project_title">Bigfile</h1>
+          <h2 id="project_tagline">A build tool designed to make a single, browser compatable, file out of your front end project</h2>
 
-        <ul>
-          <li><a href="https://github.com/jkroso/BigFile/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/jkroso/BigFile/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/jkroso/BigFile">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/jkroso/BigFile/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/jkroso/BigFile/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
         <h3>welcome</h3>
 
 <p>This project is an experiment born out of frustration trying to write and consume modular code. JS is a language which offers no support for modules. At first this seems like a weakness since all other mainstream languages do. However I have come to see this as a strength and an opportunity. I think its possible to implement a first class module system for the web. Now if you know your JS you know a native module system is on its way. However I think it is unlikely to amount to much more than syntactic sugar since I see no plans to deal with network latency. BigFile will easily allow you to author in the new format and integrate those modules with the rest of your project.</p>
@@ -65,6 +68,9 @@ As above</li>
 <a href="https://github.com/LearnBoost/browserbuild">browserbuild</a><br>
 As above</li>
 <li>
+<a href="https://github.com/stagas/frequire">frequire</a><br>
+I wasn't aware of this project before I wrote this</li>
+<li>
 <a href="http://mixu.net/gluejs/">Glue</a><br>
 Very flexible but its intended primarily for small packages. It struggles with external dependencies (at least I couldn't get it working properly). My work is heavily inspired by Glue.</li>
 <li>
@@ -90,14 +96,19 @@ This might be good but I don't understand it. I didn't give it much time because
 
 <h3>Legacy support</h3>
 
-<p>Thanks to the powers of the flexible dependecy resolution tool <a href="https://github.com/jkroso/SourceGraph">SourceGraph</a> it is fairly easy to pull together code from other systems like npm or component/component. BigFile then offers a feature taken from Glue called handlers which allows to hook into the files of your choosing through Regexp and transform their content via a function. Out of the box BigFile allows you to build projects containing JS, CSS, and handlebars templates which can be drawn from proper paths and/or the magic paths of node and component/component. </p>
+<p>Thanks to the powers of the flexible dependency resolution tool <a href="https://github.com/jkroso/SourceGraph">SourceGraph</a> it is fairly easy to pull together code from other systems like npm or component/component. BigFile then offers a feature taken from Glue called handlers which allows to hook into the files of your choosing through Regexp and transform their content via a function. Out of the box BigFile allows you to build projects containing JS, CSS, and handlebars templates which can be drawn from proper paths and/or the magic paths of node and component/component. </p>
       </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/jkroso">jkroso</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Bigfile maintained by <a href="https://github.com/jkroso">jkroso</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
+
     
+
   </body>
 </html>
