@@ -20,6 +20,7 @@ program.version('0.0.1')
     .option('-c, --compress', 'Minify the loader script')
     .option('-l, --leave-ast', 'Leave ast alone')
     .option('-L, --leave-code', 'Leave code as is')
+    .option('-p, --production', 'Remove all paths in favour of indexs')
     .parse(process.argv)
 
 var entry = path.resolve(cwd, program.entry)
@@ -84,7 +85,7 @@ var build = new Build(graph)
         return file
     })
     .handle(/\.hbs$/, function(file) {
-        var out = 'var Handlebars = require(\'handlebars\')'
+        var out = 'var Handlebars = require(\'handlebars-runtime\')'
             + '\nmodule.exports = Handlebars.template('+Handlebars(file.text)+')'
         file.text = out.replace(
             /\s*helpers = helpers \|\| Handlebars\.helpers;\s*/,
@@ -94,6 +95,7 @@ var build = new Build(graph)
     })
 
 if (program.export) build.export(program.export)
+if (program.production) build.debug(false)
 
 build.render(function (out) {
     process.stdout.write('Done: '.green.bold)
