@@ -26,7 +26,7 @@ new BigFile()
     .include(resolve(__dirname, './src/index.js'))
     // If you want to use the product of your main file from the global namespace
     .export('A_Global_if_you_wish')
-    // When done with config call ender to have your bigfile made
+    // When done with config call enter to have your bigfile made
     .render(function(text) {
     	// Put the text where you please
         res.write(text)
