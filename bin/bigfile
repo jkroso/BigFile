@@ -8,8 +8,7 @@ var program = require('commander'),
     fs = require('fs'),
     uglify = require('uglify-js'),
     all = require('promises').all,
-    cwd = process.cwd(),
-    Handlebars = require('handlebars').precompile
+    cwd = process.cwd()
 
 program.version('0.0.1')
     .usage('[options]')
@@ -39,60 +38,6 @@ var build = new Build(graph)
             leaveAst: program.leaveAst || false
         }
     )
-    .handle(/\.js$/, function (file) {return file})
-    .handle(/\/components\/\w+$/, function (file) {return file})
-    .handle(/\/package\.json$/, function (file) {
-        var data = JSON.parse(file.text), 
-            main = data.main
-        if (main) {
-            if (main[0].match(/\w/)) main = './'+main
-        }
-        else {
-            throw new Error('No main!')
-            // main = data.directories
-        }
-        file.text = 'module.exports = require("'+main+'")'
-        return file
-    })
-    .handle(/component\.json/, function (file) {
-        var data = JSON.parse(file.text), 
-            main = data.main
-        if (!main) {
-            for ( var i = data.scripts.length; i-- ; ) {
-                if (data.scripts[i].match(/index\.js$/)) main = data.scripts[i]
-            }
-        }
-        if (main) {
-            if (main[0].match(/\w/)) main = './'+main
-        }
-        file.text = 'module.exports = require("'+main+'")'
-        return file
-    })
-    .handle(/\.json$/, function (file) {
-        file.text = 'module.exports = '+file.text
-        return file
-    })
-    .handle(/\.css$/, function (file) {
-        file.text = 'var style = document.createElement(\'style\'), count = 0\n'
-            + 'style.appendChild(document.createTextNode('+JSON.stringify(file.text)+'))\n'
-            + 'exports.install = function () {\n'
-            + '  if (++count === 1) document.getElementsByTagName(\'head\')[0].appendChild(style)\n'
-            + '}\n'
-            + 'exports.remove = function () {\n'
-            + '  count = Math.max(0, --count)\n'
-            + '  if (count === 0) document.getElementsByTagName(\'head\')[0].removeChild(style)\n'
-            + '}\n'
-        return file
-    })
-    .handle(/\.hbs$/, function(file) {
-        var out = 'var Handlebars = require(\'handlebars-runtime\')'
-            + '\nmodule.exports = Handlebars.template('+Handlebars(file.text)+')'
-        file.text = out.replace(
-            /\s*helpers = helpers \|\| Handlebars\.helpers;\s*/,
-            '\nhelpers || (helpers = Handlebars.helpers);\n'
-        )
-        return file
-    })
 
 if (program.export) build.export(program.export)
 if (program.production) build.debug(false)

@@ -12,10 +12,9 @@ var fs = require('fs'),
 describe('new Build(cache)', function (build) {
     beforeEach(function () {
         build = new Build()
-            .handle(/\.js$/, function (file) {return file})
         build.graph.addType({
-            re: /\.rndom$/,
-            constructor: function (file) {
+            if: /\.rndom$/,
+            make: function (file) {
                 var location = file.path
                 this.path = location
                 this.base = path.dirname(location)

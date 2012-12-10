@@ -6,14 +6,41 @@ var Emitter = require('jkroso-emitter'),
     join = require('path').join,
     readSync = require('fs').readFileSync,
     uglify = require('uglify-js'),
-    falafel = require('falafel')
+    falafel = require('falafel'),
+    fs = require('fs'),
+    path = require('path')
 
 exports = module.exports = Build
 
+var config = require('./default-config');
+// If the user has a config file run config through it
+(function findConfig (dir) {
+    if (fs.existsSync(dir+'/.bigfile-config.js')) {
+        return require(dir+'/.bigfile-config.js')(config)
+    }
+    if (fs.existsSync(dir+'/.bigfile-config/index.js')) {
+        return require(dir+'/.bigfile-config/index.js')(config)
+    }
+    if (dir !== '/') {
+        return findConfig(path.dirname(dir))
+    } 
+})(process.cwd())
+
 function Build (graph) {
     this.graph = graph || new Graph
+    this.graph.fileTypes = config.resolveTime.fileTypes.slice()
+    this.graph.hashResolvers = config.resolveTime.lookup.hash.slice()
+    this.graph.osResolvers = config.resolveTime.lookup.file.slice()
+
     this._excludes = []
+    config.compileTime.excludes.forEach(function (re) {
+        this.exclude(re)
+    }, this)
     this._handlers = []
+    config.compileTime.handlers.forEach(function (handler) {
+        this.handle(handler.if, handler.do)
+    }, this)
+    
     this.debug(true)
     this._min_options = {
         compress: false,
