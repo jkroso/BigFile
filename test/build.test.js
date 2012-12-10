@@ -95,32 +95,34 @@ describe('new Build(cache)', function (build) {
     })
     describe('CLI', function () {
         it('should compile Tip sample', function (done) {
-            var tpath = resolve(__dirname, './tmp/tip.js')
-            run(
-                resolve(__dirname, './Tip/component.json'), 
-                tpath, 
-                ['-x', 'Tip', '-p']
-            ).then(function () {
-                var tmp = readSync(tpath, 'utf-8')
+            var temp = resolve(__dirname, './tmp/tip.js'),
+                entry = resolve(__dirname, './Tip/component.json')
+            spawn('bigfile', [
+                '-lbp', 
+                '-e', entry,
+                '-w', temp,
+                '-x', 'Tip'
+            ]).on('exit', function () {
                 var example = readSync(resolve(__dirname, './Tip/dist/Tip.js'), 'utf-8')
+                temp = readSync(temp, 'utf-8')
                 // Ordering varies so we compare on length
-                tmp.length.should.equal(example.length)
+                temp.length.should.equal(example.length)
                 done()
-            }).throw()
-        })
-
-        function run (entry, out, opts) {
-            var options = ['-lb', '-e', entry, '-w', out],
-                promise = new Promise
-
-            if (opts) options = options.concat(opts)
-            
-            spawn('bigfile', options).on('exit', function (code) {
-                promise.resolve()
             })
-
-            return promise
-        }
+        })
+        it('should load custom config', function (done) {
+            var entry = resolve(__dirname, './Tip/component.json'),
+                output = resolve(__dirname, './tmp/custom-config.js')
+            spawn('bigfile', [
+                '-lb', 
+                '-e', entry,
+                '-w', output,
+                '-x', 'module.exports'
+            ], {cwd:__dirname}).on('exit', function () {
+                require(output).should.equal("I\'ve been fucked with")
+                done()
+            })
+        })
     })  
 
 
