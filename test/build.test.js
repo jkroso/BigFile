@@ -12,10 +12,9 @@ var fs = require('fs'),
 describe('new Build(cache)', function (build) {
     beforeEach(function () {
         build = new Build()
-            .handle(/\.js$/, function (file) {return file})
         build.graph.addType({
-            re: /\.rndom$/,
-            constructor: function (file) {
+            if: /\.rndom$/,
+            make: function (file) {
                 var location = file.path
                 this.path = location
                 this.base = path.dirname(location)
@@ -29,7 +28,7 @@ describe('new Build(cache)', function (build) {
             }
         })
     })
-    it('can render a single file such that it can be required', function (done) {
+    it('can render a single file', function (done) {
         build
             .include(resolve(__dirname, './fixtures/simple/index.js'))
             .export('module.exports')
@@ -73,17 +72,39 @@ describe('new Build(cache)', function (build) {
                 done()
             })
     })
-    describe.only('CLI', function () {
+    it('can render a optimised files', function (done) {
+        build
+            .include(resolve(__dirname, './fixtures/simple/has_dependency.js'))
+            .export('module.exports')
+            .minify({
+                compress: true,
+                beautify: false,
+                leaveAst: false
+            })
+            .debug(false)
+            .render(function(text) {
+                writeSync(__dirname + '/tmp/out2.js', text, 'utf-8')
+                require('./tmp/out2.js').should.deep.equal({
+                    has_dependency: true,
+                    dependency: {
+                        simple: true
+                    }
+                })
+                done()
+            })
+    })
+    describe('CLI', function () {
         it('should compile Tip sample', function (done) {
             var tpath = resolve(__dirname, './tmp/tip.js')
             run(
                 resolve(__dirname, './Tip/component.json'), 
                 tpath, 
-                ['-x', 'Tip']
+                ['-x', 'Tip', '-p']
             ).then(function () {
                 var tmp = readSync(tpath, 'utf-8')
                 var example = readSync(resolve(__dirname, './Tip/dist/Tip.js'), 'utf-8')
-                tmp.should.equal(example)
+                // Ordering varies so we compare on length
+                tmp.length.should.equal(example.length)
                 done()
             }).throw()
         })
@@ -91,7 +112,7 @@ describe('new Build(cache)', function (build) {
         function run (entry, out, opts) {
             var options = ['-lb', '-e', entry, '-w', out],
                 promise = new Promise
-            debugger;
+
             if (opts) options = options.concat(opts)
             
             spawn('bigfile', options).on('exit', function (code) {
