@@ -1,9 +1,9 @@
-var Enumerable = require('enumerable-component')
-var core = require('path').resolve(__dirname, '../../../node_modules') + '/'
+var Enumerable = require('enumerable-component'),
+    core = require('path').dirname(require.resolve('SourceGraph'))+'/node_modules/'
 
 module.exports = [
     function node_modules (hash, base, name) {
-        if (hash[core+name+'.js']) return hash[core+name+'.js']
+        if (hash[core+name+'.js']) return core+name+'.js'
         return Enumerable([
             name,
             name+'.js',

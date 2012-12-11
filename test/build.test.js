@@ -93,6 +93,15 @@ describe('new Build(cache)', function (build) {
                 done()
             })
     })
+    it('can load npm core modules', function (done) {
+        var p = resolve(__dirname,  './fixtures/node/core/index.js')
+        build.include(p)
+            .graph.then(function(data) {
+                Object.keys(data).should.have.a.lengthOf(3)
+                data[p].text.should.equal(readSync(p, 'utf-8'))
+                done()
+            })
+    })
     describe('CLI', function () {
         it('should compile Tip sample', function (done) {
             var temp = resolve(__dirname, './tmp/tip.js'),
@@ -124,8 +133,6 @@ describe('new Build(cache)', function (build) {
             })
         })
     })  
-
-
     it.skip('can watch a file', function(done) {
         var g = this.g,
                 calls = 0;

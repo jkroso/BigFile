@@ -2,6 +2,7 @@ var Emitter = require('jkroso-emitter'),
     Hash = require('hashish'),
     Graph = require('SourceGraph'),
     merge = Hash.merge,
+    max = require('lodash').max,
     all = require('promises').all,
     join = require('path').join,
     readSync = require('fs').readFileSync,
@@ -108,12 +109,18 @@ proto.transform = function () {
                 })
             })
             .map(function (value, key) {
+                var results = new Array(handlers.length)
                 for ( var i = 0, len = handlers.length; i < len; i++ ) {
-                    if (handlers[i].re.test(key)) 
-                        return handlers[i].fn(value) 
-                        || console.warn('No value returned from the handler of '+key)
+                    results[i] = handlers[i].re.exec(key)
                 }
-                console.warn('Excluding '+key+': No handler found')
+                if (!results.length) 
+                    return console.warn('Excluding '+key+': No handler found')
+                // The best result is judged to be the one with the longest regex munch
+                len = max(results, function (res) {
+                    return res ? res[0].length : 0
+                })
+                return handlers[results.indexOf(len)].fn(value)
+                    || console.warn('No value returned from the handler of '+key)
             })
             .compact
         return all(hash.values)
@@ -174,6 +181,7 @@ proto.production = function () {
                     var name = node.arguments[0].value
                     var path = self.graph.resolve(file.base, name)
                     if (!path) throw new Error(name+' is needed for a production build')
+                    if (!hash[path]) throw new Error(name+' should not of resolved to '+path)
                     node.update('require('+hash[path].index+')')
                 }
             }).toString()

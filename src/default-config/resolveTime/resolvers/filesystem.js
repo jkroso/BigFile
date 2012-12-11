@@ -1,9 +1,10 @@
 var detectSeries = require('async').detectSeries,
     readFile = require('SourceGraph/src/file.js').readLocal,
     variants = require('SourceGraph/src/file.js').variants,
+    dirname = require('path').dirname,
     join = require('path').join,
     fs = require('fs'),
-    core = require('path').resolve(__dirname, '../../../node_modules') + '/'
+    core = dirname(require.resolve('SourceGraph'))+'/node_modules/'
 
 var node_core = [
     'assert', 'buffer_ieee754', 'buffer', 'child_process', 'cluster', 'console',

@@ -1,59 +1,37 @@
 #!/usr/bin/env node
-require('colors')
 
-var program = require('commander'),
-    Graph = require('SourceGraph'),
-    Build = require('../src/index.js'),
-    path = require('path'),
-    fs = require('fs'),
-    uglify = require('uglify-js'),
-    all = require('promises').all,
-    cwd = process.cwd()
+/**
+ * This tiny wrapper file checks for debug flags and appends them
+ * when found, before invoking the "real" _bigfile(1) executable. Idea
+ * taken from mocha(1)
+ */
 
-program.version('0.0.1')
-    .usage('[options]')
-    .option('-e, --entry [path]', 'Path to the head of your code', './src/index.js')
-    .option('-w, --write [path]', 'Path to your built code', './dist/index.js')
-    .option('-x, --export [name]', 'Global variable for your package')
-    .option('-b, --beautify', 'Format to idiomatic JS')
-    .option('-c, --compress', 'Minify the loader script')
-    .option('-l, --leave-ast', 'Leave ast alone')
-    .option('-L, --leave-code', 'Leave code as is')
-    .option('-p, --production', 'Remove all paths in favour of indexs')
-    .parse(process.argv)
+var spawn = require('child_process').spawn, 
+    args = [ __dirname + '/bigfile.js' ]
 
-var entry = path.resolve(cwd, program.entry)
-var output = path.resolve(cwd, program.write);
+process.argv.slice(2).forEach(function (arg) {
+  switch (arg) {
+    case '-d':
+        args.unshift('debug')
+        break;
+    case 'debug':
+    case '--debug':
+    case '--debug-brk':
+        args.unshift(arg)
+        break
+    default:
+        args.push(arg)
+  }
+})
 
-process.stdout.write(('Tracking files from: '+entry+'\n').green)
-
-var graph = new Graph(entry)
-var build = new Build(graph)
-    .entry(entry)
-    .minify(program.leaveCode 
-        ? false
-        : {
-            beautify: program.beautify || false,
-            compress: program.compress || false,
-            leaveAst: program.leaveAst || false
-        }
-    )
-
-if (program.export) build.export(program.export)
-if (program.production) build.debug(false)
-
-build.render(function (out) {
-    process.stdout.write('Done: '.green.bold)
-    output && fs.writeFile(output, out, 'utf-8', function (err) {
-        process.stdout.write(err 
-            ? ('but unable to write the file.' + err).red
-            : ('output written to ' + output).green
-        )
-        if (program.export) {
-            process.stdout.write('\nModule exporting as: '.blue)
-            process.stdout.write(program.export.blue.bold)
-        }
-        process.stdout.write('\n')
-        process.exit()
-    })
+spawn('node', args, { 
+    // This will forward all outputs to the main process
+    stdio: [0,1,2] 
+}).on('exit', function (code, signal) {
+    if (signal) {
+        process.kill(process.pid, signal)
+    } 
+    else {
+        process.exit(code)
+    }
 })

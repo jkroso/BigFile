@@ -53,7 +53,7 @@ function resolve (base, path) {
 }
 
 function parentDir (path) {
-	return path.split('/').slice(0,-1).join('/')
+	return path.split('/').slice(0,-1).join('/') || '/'
 }
 
 var checks = [

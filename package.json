@@ -39,8 +39,12 @@
     "hashish": "",
     "handlebars": "",
     "colors": "",
-    "detective": "~0.2.1",
-    "enumerable-component": "~0.3.1",
-    "async": "~0.1.22"
+    "detective": "",
+    "enumerable-component": "",
+    "async": "",
+    "jkroso-emitter": "",
+    "laissez-faire": "",
+    "promises": "",
+    "lodash": "~1.0.0-rc.2"
   }
 }
