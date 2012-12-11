@@ -41,6 +41,9 @@ module.exports = [
 				if (main[0].match(/\w/)) main = './'+main
 			}
 			file.text = 'module.exports = require("'+main+'")'
+			data.styles && data.styles.forEach(function (style) {
+				file.text += '\nrequire("./'+style+'").install()'
+			})
 			return file
 		}
 	},
