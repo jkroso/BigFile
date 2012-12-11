@@ -1,36 +1,44 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Bigfile : A build tool designed to make a single, browser compatable, file out of your front end project" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Bigfile by jkroso</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Bigfile</title>
   </head>
-
   <body>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/jkroso/BigFile">View on GitHub</a>
+      <header>
+        <h1>Bigfile</h1>
+        <p>A build tool designed to make a single, browser compatable, file out of your front end project</p>
+      </header>
 
-          <h1 id="project_title">Bigfile</h1>
-          <h2 id="project_tagline">A build tool designed to make a single, browser compatable, file out of your front end project</h2>
+      <div id="banner">
+        <span id="logo"></span>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/jkroso/BigFile/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/jkroso/BigFile/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
+        <a href="https://github.com/jkroso/BigFile" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/jkroso/BigFile/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/jkroso/BigFile/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
         <h3>welcome</h3>
 
 <p>This project is an experiment born out of frustration trying to write and consume modular code. JS is a language which offers no support for modules. At first this seems like a weakness, however I have come to see this as a strength. In filling the void we have seen the flexible common JS (CJS) format take hold on the server and AMD on the web. And now finally language designers are looking to implement a <a href="http://wiki.ecmascript.org/doku.php?id=harmony:modules">native system</a>. However, the only thing we can really hope to gain from it now is syntactic abstraction. i.e. network latency will continue to be a problem.<br>
@@ -77,6 +85,9 @@ I wasn't aware of this project till after I wrote this one. Its designed to supp
 <a href="http://mixu.net/gluejs/">Glue</a><br>
 Very flexible but its intended primarily for small packages. It struggles with external dependencies (at least I couldn't get it working properly). My work is heavily inspired by Glue.</li>
 <li>
+<a href="https://github.com/logicalparadox/folio">Folio</a><br>
+Acts as a build system framework. Functionality comes entirely from middleware plugins. Its architecture is similar to <a href="https://npmjs.org/package/connect">connect</a> then. I think this is brilliant and will likely adapt this project to simply be a plugin for folio in the future. Folio comes bundled with a lot of middleware bringing it to a similar level to Glue in terms of functionality.</li>
+<li>
 <a href="https://component.jit.su">component/component</a><br>
 I dislike all the meta data files. They feel unnecessary and error prone but a promising ecosystem is evolving. It looks like it might offer a nice transition to the upcoming native HTML components.</li>
 <li>
@@ -101,17 +112,12 @@ This might be good but I don't understand it. I didn't give it much time because
 
 <p>Thanks to the powers of the flexible dependency resolution tool <a href="https://github.com/jkroso/SourceGraph">SourceGraph</a> it is fairly easy to pull together code from other systems like npm or component/component. BigFile then offers a feature taken from Glue called handlers which allows to hook into the files of your choosing through Regex and transform their content via a function. Out of the box BigFile allows you to build projects containing JS, CSS, and handlebars templates which can be drawn from proper paths and/or the magic paths of node and component/component. </p>
       </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Bigfile maintained by <a href="https://github.com/jkroso">jkroso</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/jkroso">jkroso</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
       </footer>
     </div>
-
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
-
   </body>
 </html>
