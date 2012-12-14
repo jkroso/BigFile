@@ -9,9 +9,9 @@
  */
 function require (path, parent){
 	// Determine the correct path
-	path = resolve(parent, path)
-	var module = modules[path]
-	if (!module) throw new Error('failed to require "'+path+'" from '+parent)
+	var fullpath = resolve(parent, path)
+	var module = modules[fullpath]
+	if (module == null) throw new Error('failed to require "'+path+'" from '+parent)
 	// It hasn't been loaded before
 	if (typeof module === 'string') {
 		new Function(
@@ -19,15 +19,15 @@ function require (path, parent){
 			'exports', 
 			'require', 
 			// Eval prevents the function wrapper being visible
-			"eval("+JSON.stringify(module+'\n//@ sourceURL='+encodeURI(path))+")"
+			"eval("+JSON.stringify(module+'\n//@ sourceURL='+encodeURI(fullpath))+")"
 			// module
 		)
-		.call((modules[path] = module = {exports:{}}).exports, 
-		    module, 
-		    module.exports, 
+		.call((modules[fullpath] = module = {exports:{}}).exports, 
+			module, 
+			module.exports, 
 			// Relative require function
-		    function (relp) {
-				return require('.' === relp[0] ? join(path, relp) : relp, path)
+			function (relp) {
+				return require('.' === relp[0] ? join(fullpath, relp) : relp, fullpath)
 			}
 		)
 	}
@@ -44,11 +44,11 @@ function resolve (base, path) {
 	}
 	else {
 		var res
-        do {
-            for ( var i = 0, len = checks.length; i < len; i++ ) {
-                if (res = checks[i](modules, base, path)) return res
-            }
-        } while ((base = parentDir(base)) !== '/') 
+		do {
+			for ( var i = 0, len = checks.length; i < len; i++ ) {
+				if (res = checks[i](base, path)) return res
+			}
+		} while ((base = parentDir(base)) !== '/') 
 	}
 }
 
@@ -57,44 +57,43 @@ function parentDir (path) {
 }
 
 var checks = [
-    function node_modules (hash, base, name) {
-        if (hash['/node_core/'+name+'.js']) return '/node_core/'+name+'.js'
-        return [
-            name,
-            name+'.js',
-            name+'.json',
-            name+'/index.js',
-            name+'/index.json',
-            name+'/package.json',
-        ]
-        .map(function (p) {
-            return base+'/node_modules/'+p
-        })
-        .filter(function (p) {
-            return !!hash[p]
-            
-        })[0]
-    },
-    function components (hash, base, name) {
-        return [
-            // Check for an alias...
-            name,
-            // ...and a real component
-            name+'/component.json'
-        ]
-        .map(function (p) {
-            return base+'/components/'+p
-        })
-        .filter(function (p) {
-            return !!hash[p]
-        })[0]
-    }
+	function node_modules (base, name) {
+		if (modules['/node_core/'+name+'.js'] != null) return '/node_core/'+name+'.js'
+		return [
+			name,
+			name+'.js',
+			name+'.json',
+			name+'/index.js',
+			name+'/index.json',
+			name+'/package.json',
+		]
+		.map(function (p) {
+			return base+'/node_modules/'+p
+		})
+		.filter(function (p) {
+			return !!modules[p]	
+		})[0]
+	},
+	function components (base, name) {
+		return [
+			// Check for an alias...
+			name,
+			// ...and a real component
+			name+'/component.json'
+		]
+		.map(function (p) {
+			return base+'/components/'+p
+		})
+		.filter(function (p) {
+			return !!modules[p]
+		})[0]
+	}
 ]
 
 function join (a, b) { 
-	var path = a.split('/').slice(0, -1),
-		segs = b.split('/'),
-		i = -1
+	var path = a.split('/').slice(0, -1)
+	  , segs = b.split('/')
+	  , i = -1
 
 	while (++i < segs.length) {
 		if ('..' === segs[i]) path.pop()
