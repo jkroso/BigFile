@@ -1,5 +1,5 @@
 var program = require('commander')
-  , Graph = require('SourceGraph')
+  , Graph = require('sourcegraph')
   , Build = require('../src')
   , path = require('path')
   , fs = require('fs')
