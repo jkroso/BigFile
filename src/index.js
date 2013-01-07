@@ -1,6 +1,6 @@
 var Emitter = require('jkroso-emitter'),
 	Hash = require('hashish'),
-	Graph = require('SourceGraph'),
+	Graph = require('sourcegraph'),
 	merge = Hash.merge,
 	max = require('lodash').max,
 	all = require('jkroso-promises').all,
@@ -161,7 +161,7 @@ proto.development = function () {
 		var requireCode = readSync(join(__dirname, '../src/require.js'), 'utf-8')
 		requireCode = requireCode.replace(
 			/\/node_core\//g, 
-			dirname(require.resolve('SourceGraph'))+'/node_modules/'
+			dirname(require.resolve('sourcegraph'))+'/node_modules/'
 		)
 		return '!function(){\n'
 			+ requireCode + '\n'

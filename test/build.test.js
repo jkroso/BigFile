@@ -5,7 +5,7 @@ var fs = require('fs'),
 	resolve = path.resolve,
 	should = require('chai').should(),
 	assert = require('chai').assert,
-	Build = require('../src/index.js'),
+	Build = require('../src'),
 	spawn = require('child_process').spawn,
 	Promise = require('laissez-faire')
 

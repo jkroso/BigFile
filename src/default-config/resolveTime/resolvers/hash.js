@@ -1,5 +1,5 @@
 var Enumerable = require('enumerable-component'),
-    core = require('path').dirname(require.resolve('SourceGraph'))+'/node_modules/'
+    core = require('path').dirname(require.resolve('sourcegraph'))+'/node_modules/'
 
 module.exports = [
     function node_modules (hash, base, name) {
