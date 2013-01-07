@@ -178,7 +178,6 @@ proto.production = function () {
 		files.forEach(function (file, i) {
 			file.index = i
 			if (file.path === self._entry) entry = i
-			file.text += '\n//@ sourceURL='+encodeURI(file.path)
 			hash[file.path] = file
 		})
 		files = files.map(function (file) {
