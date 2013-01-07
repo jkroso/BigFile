@@ -137,19 +137,19 @@ proto.render = function (callback) {
 				: out
 		})
 		.then(callback)
-		.throw()
-		
-	function minify (code, options) {
-		var toplevel = uglify.parse(code)
+		.throw()		
+}
+
+function minify (code, options) {
+	var toplevel = uglify.parse(code)
+	toplevel.figure_out_scope()
+	if (!options.leaveAst) {
+		toplevel.transform(uglify.Compressor())
 		toplevel.figure_out_scope()
-		if (!options.leaveAst) {
-			toplevel.transform(uglify.Compressor())
-			toplevel.figure_out_scope()
-		}
-		toplevel.compute_char_frequency()
-		if (options.compress) toplevel.mangle_names()
-		return toplevel.print_to_string({beautify:options.beautify})
 	}
+	toplevel.compute_char_frequency()
+	if (options.compress) toplevel.mangle_names()
+	return toplevel.print_to_string({beautify:options.beautify})
 }
 
 proto.development = function () {
@@ -178,6 +178,7 @@ proto.production = function () {
 		files.forEach(function (file, i) {
 			file.index = i
 			if (file.path === self._entry) entry = i
+			file.text = minify(file.text, self._min_options)
 			hash[file.path] = file
 		})
 		files = files.map(function (file) {
