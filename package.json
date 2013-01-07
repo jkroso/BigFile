@@ -1,6 +1,6 @@
 {
   "name": "bigfile",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Turn a mapping of modules into a browser suitable package. A build tool then.",
   "main": "src/index.js",
   "directories": {
@@ -45,6 +45,7 @@
     "jkroso-emitter": "",
     "laissez-faire": "",
     "jkroso-promises": "",
-    "lodash" : ""
+    "lodash" : "",
+    "sourcegraph": ""
   }
 }
