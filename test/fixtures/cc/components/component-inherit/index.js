@@ -1,1 +1,1 @@
-module.exports = 'inherit';
+module.exports = 'inherit'

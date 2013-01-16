@@ -1,7 +1,7 @@
 {
 	"name": "simple",
 	"dependencies": {
-
+		"awesome/animal": "*"
 	},
 	"scripts": [
 		"index.js"

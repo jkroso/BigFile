@@ -1,1 +1,1 @@
-require('foo')
+exports.foo = require('foo')

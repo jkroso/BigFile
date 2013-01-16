@@ -1,1 +1,1 @@
-// Sweet nothing here
+exports.animal = require('animal')

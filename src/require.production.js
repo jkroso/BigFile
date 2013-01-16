@@ -8,8 +8,8 @@ function require (index) {
 			'module',
 			'exports',
 			'require',
-			"eval("+JSON.stringify(module+'\n//@ sourceURL=/'+index)+")"
-			// module
+			module
+			// "eval("+JSON.stringify(module+'\n//@ sourceURL=/'+index)+")"
 		)
 		.call((modules[index] = module = {exports:{}}).exports, 
 			module,
