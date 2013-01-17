@@ -1,4 +1,5 @@
 var falafel = require('falafel')
+  , debug = require('debug')('bigfile:short-paths')
 
 /**
  * Chop the fat of the local paths.
@@ -18,6 +19,7 @@ module.exports = function (files, next) {
 		return file.path
 	})
 	var dir = commonDir(paths)
+	debug('Excess path = %s', dir)
 	// Nothing we can do
 	if (dir === '/') next(files)
 
@@ -38,6 +40,9 @@ module.exports = function (files, next) {
 		file.path = file.path.replace(r, '')
 		return file
 	})
+
+	// Update the entry path 
+	this._entry = this._entry.replace(r, '')
 
 	next(files)
 

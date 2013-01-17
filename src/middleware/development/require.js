@@ -1,6 +1,3 @@
-var modules = {}
-  , checks = []
-
 /**
  * Require the given path.
  *
@@ -91,7 +88,7 @@ function normalize (path) {
 }
 
 function join () {
-	return normalize(slice(arguments).filter(function(p, index) {
+	return normalize(slice(arguments).filter(function(p) {
 		return p
 	}).join('/'))
 }

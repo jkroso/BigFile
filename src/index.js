@@ -96,6 +96,7 @@ proto.use = function () {
 	for (var i = 0, len = arguments.length; i < len; i++) {
 		var middleware = arguments[i]
 		if (typeof middleware === 'string') {
+			debug('loading middleware: %s', middleware)
 			middleware = require(__dirname+'/middleware/'+middleware)
 		}
 		use.call(this, middleware)

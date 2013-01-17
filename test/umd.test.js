@@ -50,7 +50,7 @@ describe('the umd plugin', function (build) {
 			.include(p)
 			.use(function (code, next) {
 				// uncomment if you want to try running the code in a browser
-				write(__dirname+'/tmp/file.js', code)
+				// write(__dirname+'/tmp/file.js', code)
 				var a = {}
 				vm.runInNewContext(code, a)
 				a.should.have.property('umd')
