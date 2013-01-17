@@ -29,6 +29,9 @@ program.on('--help', function () {
 	console.log('  - With debugging enabled; this enables you to step through the build process')
 	console.log('     $ bigfile -p src/index.js debug'.grey)
 	console.log('')
+	console.log('  - Writting to file system')
+	console.log('     $ bigfile src/index.js > built.js'.grey)
+	console.log('')
 })
 
 program.parse(process.argv)
@@ -58,13 +61,14 @@ if (program.production) {
 		'transform',
 		'production'
 	)
-	if (!program.noUmd) {
+
+	if (program.umd) {
 		build.use(
 			'umd',
 			'compress'
 		)
 	} else {
-		build.use('globalise')
+		build.use('global')
 	}
 } else {
 	build.use(
