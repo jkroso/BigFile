@@ -24,8 +24,9 @@ function umd (name, entryPath, code) {
 	  , "		context["+JSON.stringify(name)+"] = definition()"
 	  , "	}"
 	  , "}(this, function () {"
-	   // TODO: fix the weird line break issue that only shows up when I pipe the output to a file
-	  , code.replace(/^/mg, '\t')
+	   // Need to remove carriage returns because they look funny when output is redirected to a file
+	   // They have no effect otherwise as far as I am aware
+	  , code.replace(/^/mg, '\t').replace(/\r/g, '')
 	  , "\treturn require("+JSON.stringify(entryPath)+")"
 	  , "})"
 	].join('\n')
