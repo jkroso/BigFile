@@ -7,7 +7,7 @@ colony:
 	@node_modules/.bin/colony src/index.js -r Readme.md -s 2
 
 test:
-	@node_modules/.bin/mocha -R $(Reporter) -t 30000 test/build.test.js
+	@node_modules/.bin/mocha -R $(Reporter) --slow 2s -t 10s test/*.test.js
 
 debug:
 	@node_modules/.bin/mocha debug -R $(Reporter) -t 3000s test/build.test.js

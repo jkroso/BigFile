@@ -25,8 +25,8 @@ describe('the transform plugin', function (build) {
 				files.forEach(function (file) {
 					file.text.should.include('$$bigfile-signature$$')
 				})
-				done()
+				next()
 			})
-			.run()
+			.run(function () {done()})
 	})
 })

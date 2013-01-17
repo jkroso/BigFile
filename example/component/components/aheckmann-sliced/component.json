@@ -1,0 +1,5 @@
+{
+	"name": "sliced",
+	"version": "0.0.4",
+	"scripts": ["index.js"]
+}

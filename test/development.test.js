@@ -38,7 +38,8 @@ describe('the development plugin', function (build) {
 				.and.include('function components')
 				.and.include('checks = [node_modules, components]')
 				.and.include('var base = "/')
-		}).run(done)
+			next()
+		}).run(function () {done()})
 	})
 
 	it('should be runnable when the modules use relative paths', function (done) {
@@ -52,7 +53,8 @@ describe('the development plugin', function (build) {
 					simple: true
 				}
 			})
-		}).run(done)
+			next()
+		}).run(function () {done()})
 	})
 
 	it('should be runnable when the modules use node_modules', function (done) {
@@ -66,7 +68,8 @@ describe('the development plugin', function (build) {
 			expect(ret).to.deep.equal({
 				foo: 'foo/index.js'
 			})
-		}).run(done)
+			next()
+		}).run(function () {done()})
 	})
 
 	it('should be runnable when the modules use components', function (done) {
@@ -82,7 +85,8 @@ describe('the development plugin', function (build) {
 					inherit: 'inherit'
 				}
 			})
-		}).run(done)
+			next()
+		}).run(function () {done()})
 	})
 
 	it('should be runnable when modules use remote paths', function (done) {
@@ -95,6 +99,7 @@ describe('the development plugin', function (build) {
 			expect(ret).to.exist
 				.and.have.property('title')
 				.and.have.property(13, 'enter')
-		}).run(done)
+			next()
+		}).run(function () {done()})
 	})
 })

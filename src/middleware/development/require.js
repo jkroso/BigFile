@@ -18,19 +18,24 @@ function require (path, parent){
 
 	// It hasn't been loaded before
 	if (typeof module === 'string') {
-		new Function(
-			'module', 
-			'exports', 
-			'require', 
+		var code = module
+		module = {
+			src: code,
+			exports: {}
+		}
+		modules[fullpath] = module
+		Function(
+			'module',
+			'exports',
+			'require',
 			// Eval prevents the function wrapper being visible
-			"eval("+JSON.stringify(module+'\n//@ sourceURL='+encodeURI(fullpath))+")"
+			// The source allows the browser to present this module as if it was a normal file
+			"eval("+JSON.stringify(code+'\n//@ sourceURL='+encodeURI(fullpath))+")"
 			// module
-		).call((modules[fullpath] = module = {exports:{}}).exports,
-			module, 
-			module.exports, 
+		).call(module.exports, module, module.exports,
 			// Relative require function
-			function (relp) {
-				return require('.' === relp[0] ? join(dirname(fullpath), relp) : relp, fullpath)
+			function (rp) {
+				return require('.' === rp[0] ? join(dirname(fullpath), rp) : rp, fullpath)
 			}
 		)
 	}

@@ -1,58 +1,72 @@
 var program = require('commander')
-  , Graph = require('sourcegraph')
   , Build = require('../src')
   , path = require('path')
-  , fs = require('fs')
-  , uglify = require('uglify-js')
-  , all = require('jkroso-promises').all
-  , cwd = process.cwd()
+  , all = require('when-all')
+  , debug = require('debug')('bigfile:cli')
 
 require('colors')
 
-program.version('0.1.0')
-	.usage('[options]')
-	.option('-e, --entry [path]', 'Path to the head of your code', './src/index.js')
-	.option('-w, --write [path]', 'Path to your built code', './dist/index.js')
+program.version(require('../package').version)
+	.usage('[options] <files...>')
 	.option('-x, --export [name]', 'Global variable for your package')
 	.option('-b, --beautify', 'Format to idiomatic JS')
 	.option('-c, --compress', 'Minify the loader script')
-	.option('-l, --leave-ast', 'Leave ast alone')
-	.option('-L, --leave-code', 'Leave code as is')
-	.option('-p, --production', 'Remove all paths in favour of indexs')
+	.option('-l, --leave-ast', 'Don\'t optimise the ast')
+	.option('-L, --leave-code', 'Leave code completely')
+	.option('-p, --production', 'Remove all paths in favor of index\'s')
 	.option('-d, debug', 'Bigfile takes all node\'s debug options')
-	.parse(process.argv)
 
-var entry = path.resolve(cwd, program.entry)
-var output = path.resolve(cwd, program.write);
 
-process.stdout.write(('Tracking files from: '+entry+'\n').green)
+program.on('--help', function () {
+	console.log('  Example: ')
+	console.log('    $ bigfile src/index.js')
+	console.log('    Tidy output')
+	console.log('    $ bigfile -b src/index.js')
+	console.log('')
+})
 
-var build = new Build()
-	.include(entry)
-	.minify(program.leaveCode 
-		? false
-		: {
-			beautify: program.beautify || false,
-			compress: program.compress || false,
-			leaveAst: program.leaveAst || false
-		}
-	)
+program.parse(process.argv)
 
-if (program.export) build.export(program.export)
+var files = program.args.map(function (file) {
+	return path.resolve(file)
+})
+
+if (program.export == null) {
+	program.export = path.basename(process.cwd())
+	debug('Inferred build name from path: %s', program.export)
+}
+
+var build = new Build(program.export)
+process.stderr.write('Module exporting as: '.blue)
+process.stderr.write(program.export.blue.bold)
+process.stderr.write('\n')
+
+files.forEach(function (file) {
+	console.warn(('Including file: %j').green, file)
+	build.include(file)
+})
+
+if (program.leaveCode) {
+	build.minify(false)
+} else {
+	build.minify({
+		compress: !!program.compress,
+		beautify: !!program.beautify,
+		leaveAst: !!program.leaveAst
+	})
+}
+
+
 if (program.production) build.debug(false)
 
-build.render(function (out) {
-	process.stdout.write('Done: '.green.bold)
-	output && fs.writeFile(output, out, 'utf-8', function (err) {
-		process.stdout.write(err 
-			? ('but unable to write the file.' + err).red
-			: ('output written to ' + output).green
-		)
-		if (program.export) {
-			process.stdout.write('\nModule exporting as: '.blue)
-			process.stdout.write(program.export.blue.bold)
-		}
-		process.stdout.write('\n')
-		process.exit()
-	})
+build.use(
+	'filter',
+	'transform',
+	'dict',
+	'development',
+	'umd'
+).run(function (code) {
+	process.stdout.write(code)
+	process.stdout.write('\n')
+	process.exit(0)
 })

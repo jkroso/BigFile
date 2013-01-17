@@ -3,10 +3,11 @@ var Emitter = require('emitter')
   , Graph = require('sourcegraph')
   , dirname = require('path').dirname
   , resolve = require('path').resolve
+  , debug = require('debug')('bigfile')
 
 exports = module.exports = Build
 
-function Build () {
+function Build (name) {
 	Emitter.call(this)
 	Rack.call(this)
 	this.graph = new Graph().use(
@@ -17,6 +18,7 @@ function Build () {
 		'css'
 	)
 
+	this.name = name || ''
 	this._excludes = []
 	this._handlers = []
 	
@@ -59,11 +61,6 @@ proto.include = function (p) {
 	return this
 }
 
-proto.export = function (ns) {
-	this.options.export = ns
-	return this
-}
-
 proto.exclude = function (re) {
 	this._excludes.push(re)
 	return this
@@ -86,43 +83,49 @@ proto.minify = function (opts) {
 
 proto.run = function (fn) {
 	var self = this
+	if (fn) this.use(fn)
 	this.graph.then().end(function (files) {
 		self.send(files)
-		fn && fn()
 	})
 }
 
 var use = Rack.prototype.use
-proto.use = function (fn) {
-	if (typeof fn === 'string') {
-		fn = require(__dirname+'/middleware/'+fn)
+
+proto.use = function () {
+	// Handle several arguments
+	for (var i = 0, len = arguments.length; i < len; i++) {
+		var middleware = arguments[i]
+		if (typeof middleware === 'string') {
+			middleware = require(__dirname+'/middleware/'+middleware)
+		}
+		use.call(this, middleware)
 	}
-	return use.call(this, fn)
+
+	return this
 }
 
-proto.plugin = function (plug) {
-	// Handle several arguments
-	if (arguments.length > 1) {
-		for (var i = 0, len = arguments.length; i < len; i++) {
-			this.plugin(arguments[i])
-		}
-		return this
-	}
-
+proto.plugin = function () {
 	var self = this
-	if (typeof plug === 'string')
-		plug = require(__dirname+'/plugins/'+plug)
 
-	plug.handlers && plug.handlers.forEach(function (h) {
-		self.handle(h.if, h.do)
-	})
-	
-	// TODO: this should be a deep merge
-	plug.options && merge(this.options, plug.options)
-	
-	plug.excludes && plug.excludes.forEach(function (regex) {
-		self.exclude(regex)
-	})
+	for (var i = 0, len = arguments.length; i < len; i++) {
+		var plug = arguments[i]
+		if (typeof plug === 'string') {
+			debug('Loading plugin: %s', plug)
+			plug = require(__dirname+'/plugins/'+plug)
+		}
+
+		plug.handlers && plug.handlers.forEach(function (h) {
+			debug('Plugin handler: %s', h.if)
+			self.handle(h.if, h.do)
+		})
+		
+		// TODO: this should be a deep merge
+		plug.options && merge(this.options, plug.options)
+		
+		plug.excludes && plug.excludes.forEach(function (regex) {
+			self.exclude(regex)
+		})
+	}
 
 	return this
 }

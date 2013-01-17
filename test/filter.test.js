@@ -19,8 +19,8 @@ describe('the filter plugin', function (build) {
 			.exclude(/index/)
 			.use(function (files, next) {
 				files.should.have.a.lengthOf(1)
-				done()
+				next()
 			})
-			.run()
+			.run(function () {done()})
 	})
 })
