@@ -37,7 +37,6 @@ describe('the development plugin', function (build) {
 				.and.include('function slice')
 				.and.include('function components')
 				.and.include('checks = [node_modules, components]')
-				.and.include('var base = "/')
 			next()
 		}).run(function () {done()})
 	})

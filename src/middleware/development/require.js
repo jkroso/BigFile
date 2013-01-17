@@ -60,13 +60,14 @@ function resolve (base, path) {
 			|| modules[path+'/index.js'] && path+'/index.js'
 	}
 	else {
-		do {
+		while (true) {
 			for ( var i = 0, len = checks.length; i < len; i++ ) {
 				var res = checks[i](base, path, modules)
 				if (res != null) return res
 			}
+			if (base === '/') break
 			base = dirname(base)
-		} while (base !== '/') 
+		}
 	}
 }
 

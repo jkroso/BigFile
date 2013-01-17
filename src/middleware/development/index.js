@@ -42,10 +42,7 @@ function nodeModulesCode () {
 		node.variants.toString()
 	].map(function (code) {
 		return code.replace(/variants/, 'nodeishVariants')
-	}).concat(
-		// this is the path to node core modules
-		'var base = ' + JSON.stringify(node.basePath)
-	).join('\n')
+	}).join('\n')
 	return codes
 }
 
