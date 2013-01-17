@@ -15,8 +15,11 @@ var falafel = require('falafel')
  */
 
 module.exports = function (files, next) {
+	var nmreg = /^\/node_modules\//
 	var paths = files.map(function (file) {
 		return file.path
+	}).filter(function (path) {
+		return !nmreg.test(path)
 	})
 	var dir = commonDir(paths)
 	debug('Excess path = %s', dir)
