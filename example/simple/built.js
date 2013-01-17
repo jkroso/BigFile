@@ -4,7 +4,7 @@
 	} else if (typeof define === 'function' && typeof define.amd  === 'object') {
 		define(definition)
 	} else {
-		context["Racks"] = definition()
+		context["BigFile"] = definition()
 	}
 }(this, function () {
 	/**	
@@ -160,7 +160,7 @@
 			return join(dir, 'components', name)
 		})
 	}
-	var modules = {"/rack/component.json":"module.exports = {\n\t\"name\": \"racks\",\n\t\"version\": \"0.0.1\",\n  \t\"description\": \"Reusable middleware implementation for Node.js & the browsers\",\n  \t\"scripts\": [\"index.js\"],\n  \t\"dependencies\": {\n  \t\t\"aheckmann/sliced\":  \"*\"\n  \t}\n}","/rack/components/sliced":"module.exports = require(\"aheckmann-sliced\")","/rack/index.js":"var slice = require('sliced')\n  , splice = Array.prototype.splice\n\n/**\n * Racks.\n *\n * @constructor\n */\n\nfunction Racks() {\n  this.stack = [];\n  this.between = [];\n};\n\n/**\n * Register a middleware.\n *\n * @param {Function} fn\n * @returns {Racks} `this`\n * @api public\n */\n\nRacks.prototype.push =\nRacks.prototype.use = function(fn) {\n  this.stack.push(fn);\n  return this;\n};\n\n/**\n * Register a function executed\n * after each middleware.\n *\n * @param {Function} fn\n * @returns {Racks} `this`\n * @api public\n */\n\nRacks.prototype.after = function(fn) {\n  this.between.push(fn);\n  return this;\n};\n\n/**\n * Trigger the middlewares.\n *\n * @param {Mixed} param1\n * @param {Mixed} param2..\n * @api public\n */\n\nRacks.prototype.send = function() {\n  var stack = this.batch()\n    , self = this\n\n  function next() {\n    var fn = stack.shift()\n      , args = slice(arguments);\n\n    args.push(next);\n    if (fn) fn.apply(self, args);\n  }\n\n  next.apply(this, arguments);\n};\n\n/**\n * Return the stack. Apply the after\n * callbacks.\n *\n * @returns {Array}\n * @api private\n */\n\nRacks.prototype.batch = function() {\n  var stack = this.stack\n    , between = this.between\n    , len = stack.length\n\n  if (!len || !between.length) return stack;\n\n  stack = stack.slice()\n  between = [len - 1, 0].concat(between)\n  \n  do {\n    splice.apply(stack, between)\n  } while (--between[0])\n\n  return stack\n};\n\n/*!\n * Export `Racks`.\n */\n\nmodule.exports = Racks;\n","/components/aheckmann-sliced/component.json":"module.exports = {\n\t\"name\": \"sliced\",\n\t\"version\": \"0.0.4\",\n\t\"scripts\": [\"index.js\"]\n}","/components/aheckmann-sliced/index.js":"\n/**\n * An Array.prototype.slice.call(arguments) alternative\n *\n * @param {Object} args something with a length\n * @param {Number} slice\n * @param {Number} sliceEnd\n * @api public\n */\n\nmodule.exports = function () {\n  var args = arguments[0];\n  var slice = arguments[1];\n  var sliceEnd = arguments[2];\n\n  var ret = [];\n  var len = args.length;\n\n  if (0 === len) return ret;\n\n  var start = slice < 0\n    ? Math.max(0, slice + len)\n    : slice || 0;\n\n  var end = 3 === arguments.length\n    ? sliceEnd < 0\n      ? sliceEnd + len\n      : sliceEnd\n    : len;\n\n  while (end-- > start) {\n    ret[end - start] = args[end];\n  }\n\n  return ret;\n}\n"}
+	var modules = {"/simple.js":"module.exports = 'simple example with no dependencies'"}
 	var checks = [node_modules, components]
-	return require("/rack/component.json")
+	return require("/simple.js")
 })
