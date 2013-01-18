@@ -1,9 +1,8 @@
 /.jshintrc
 /.npmignore
-/browser/
-/node_modules/
-/Rakefile
-/tests/
-/glue.js
+/.gitignore
+/node_modules
+/test
+/example
 *.sublime-project
 *.sublime-workspace
