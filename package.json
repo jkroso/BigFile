@@ -1,6 +1,6 @@
 {
   "name": "bigfile",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Turn a mapping of modules into a browser suitable package",
   "main": "src/index.js",
   "devDependencies": {
@@ -34,10 +34,11 @@
     "async-forEach"
   ],
   "bin": {
-    "bigfile": "bin/bigfile"
+    "bigfile": "bin/bigfile",
+    "bigfile.js": "bin/bigfile.js"
   },
   "scripts": {
-    "test": "mocha -R spec -t 0"
+    "test": "make test"
   },
   "repository": {
     "type": "git",
