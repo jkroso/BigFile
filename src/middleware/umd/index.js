@@ -21,7 +21,7 @@ function umd (name, entryPath, code) {
 	  , "	} else if (typeof define === 'function' && typeof define.amd  === 'object') {"
 	  , "		define(definition)"
 	  , "	} else {"
-	  , "		context["+JSON.stringify(name)+"] = definition()"
+	  , "		" + (name === 'null' || name === null ? "" : "context['"+name+"'] = ") + "definition()"
 	  , "	}"
 	  , "}(this, function () {"
 	   // Need to remove carriage returns because they look funny when output is redirected to a file

@@ -18,7 +18,9 @@ function Build (name) {
 		'css'
 	)
 
-	this.name = name || ''
+	this.name = name === null 
+		? null 
+		: (name || 'undefined-bigfile-build')
 	this._excludes = []
 	this._handlers = []
 	
@@ -81,7 +83,7 @@ proto.run = function (fn) {
 	if (fn) this.use(fn)
 	this.graph.then(function (files) {
 		self.send(files)
-	})
+	}).throw()
 }
 
 var use = Rack.prototype.use

@@ -115,10 +115,9 @@ else if (program.production) {
 	}
 	build.use('compress')
 } else {
+	build.use('filter', 'transform')
+	if (!program.leavePaths) build.use('short-paths')
 	build.use(
-		'filter',
-		'transform',
-		'short-paths',
 		'dict',
 		'development',
 		'umd'
