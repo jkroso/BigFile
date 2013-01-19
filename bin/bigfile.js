@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var program = require('commander')
   , Build = require('../src')
   , path = require('path')
@@ -87,10 +89,6 @@ process.stderr.write('Module exporting as: '.blue)
 process.stderr.write(program.export.blue.bold)
 process.stderr.write('\n')
 
-files.forEach(function (file) {
-	console.warn(('Including file: %j').green, file)
-	build.include(file)
-})
 
 program.plug && program.plug.forEach(function (plugin) {
 	console.warn('install plugin: %s'.blue, plugin)
@@ -110,15 +108,12 @@ else if (program.production) {
 		'transform',
 		'production'
 	)
-
 	if (program.umd) {
-		build.use(
-			'umd',
-			'compress'
-		)
+		build.use('umd')
 	} else {
 		build.use('global')
 	}
+	build.use('compress')
 } else {
 	build.use(
 		'filter',
@@ -134,24 +129,40 @@ else if (program.production) {
 	}
 }
 
-build.run(function (code) {
-	process.stdout.write(code)
-	process.stderr.write('\n')
-	process.exit(0)
-})
+if (files.length) {
+	files.forEach(function (file) {
+		console.warn(('Including file: %j').green, file)
+		build.include(file)
+	})
+	run()
+} else {
+	var buf = ''
+	process.stdin.setEncoding('utf8')
 
+	process.stdin.on('data', function(chunk){ buf += chunk })
 
+	process.stdin.on('end', function(){
+		var files = JSON.parse(buf)
+		for (var i = 0, len = files.length; i < len; i++) {
+			if (files[i].parents.length === 0) build.entry = files[i].path
+		}
+		if (!build.entry) throw new Error('Unable to determine an entry file')
+		debug('Entry file determined as %s', build.entry)
+		// Needs to be stored on the sourcegraph since some middleware makes use
+		// of sourcegraphs methods
+		build.graph.data = files
+		// Create the mapping that sourcegraph expects
+		files.forEach(function (file) {
+			files[file.path] = file
+		})
+		run()
+	}).resume()
+}
 
-
-// .option('-b, --beautify', 'Format to idiomatic JS')
-// .option('-l, --leave-ast', 'Don\'t optimize the ast')
-// .option('-L, --leave-code', 'Leave code completely')
-// if (program.leaveCode) {
-// 	build.minify(false)
-// } else {
-// 	build.minify({
-// 		compress: !!program.compress,
-// 		beautify: !!program.beautify,
-// 		leaveAst: !!program.leaveAst
-// 	})
-// }
+function run () {
+	build.run(function (code) {
+		process.stdout.write(code)
+		process.stderr.write('\n')
+		process.exit(0)
+	})
+}

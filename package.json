@@ -1,6 +1,6 @@
 {
   "name": "bigfile",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "description": "Turn a mapping of modules into a browser suitable package",
   "main": "src/index.js",
   "devDependencies": {

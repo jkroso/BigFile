@@ -1,6 +1,7 @@
 var debug = require('debug')('transform')
   , all = require('when-all')
   , winner = require('winner')
+  , path = require('path')
 
 /**
  * Apply handlers to the file types they match
@@ -14,29 +15,24 @@ module.exports = function (files, next) {
 	  , options = this.options
 
 	files = files.map(function (file) {
-		var i = handlers.length
-		  , results = new Array(i)
-
-		while (i--) {
-			results[i] = file.path.match(handlers[i].re)
-		}
-		debug('Handler results %pj', results)
 		// The best result is judged to be the one with the longest regex munch
-		var match = winner(results, function (res) {
-			return res && res[0].length
-		})
-		debug('Winning regex won with: %pj', match)
-		i = results.indexOf(match)
+		var match = winner(handlers, function (handler) {
+			var res = file.path.match(handler.re)
+			return (res && res[0].length) || 0
+		}, 1)
 
-		debug('File before %pj', file)
-		file = handlers[i].fn(file, options)
-		debug('File after %pj', file)
-		
-		return file
+		if (match) {
+			debug('File before %pj', file)
+			file = match.fn(file, options)
+			debug('File after %pj', file)
+			return file
+		} else {
+			debug('No handler found for %s, it will be excluded', file.path)
+		}
 	})
 	// Remove those which returned nothing
-	// TODO: implment when-filter
 	.filter(Boolean)
+	// TODO: implment when-filter
 
 	all(files).end(next)
 }

@@ -1,6 +1,7 @@
 var falafel = require('falafel')
   , minify = require('../../utils').minify
   , read = require('fs').readFileSync
+  , dirname = require('path').dirname
 
 /*!
  * Load the require implementation
@@ -29,20 +30,20 @@ module.exports = function (files, next) {
 		dict[file.path] = file
 	})
 
-	if (this._entry == null) 
-		throw new Error('Production build needs an ._entry defined')
+	if (this.entry == null) 
+		throw new Error('Production build needs an .entry defined')
 
 	// Set the entry to its index instead of its path
-	this._entry = dict[this._entry].index
+	this.entry = dict[this.entry].index
 
 	// Replace paths with index's
 	files = files.map(function (file) {
 		return falafel(file.text, function (node) {
 			if (isRequire(node)) {
 				var name = node.arguments[0].value
-				var path = self.graph.resolveInternal(file.base, name)
+				var path = self.graph.resolveInternal(dirname(file.path), name)
 				
-				if (!path) throw new Error(name+' is not in the soucegraph')
+				if (!path) throw new Error(name+' could not be found from '+file.path)
 				if (!dict[path]) throw new Error(name+' should not of resolved to '+path)
 				
 				node.update('require('+dict[path].index+')')
@@ -52,7 +53,7 @@ module.exports = function (files, next) {
 
 	var code = [
 		requireCode,
-		'var modules = ' + JSON.stringify(files),
+		'var modules = ' + JSON.stringify(files)
 	].join('\n')
 
 	next(minify(code, {

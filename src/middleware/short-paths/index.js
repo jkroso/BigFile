@@ -45,7 +45,7 @@ module.exports = function (files, next) {
 	})
 
 	// Update the entry path 
-	this._entry = this._entry.replace(r, '')
+	this.entry = this.entry.replace(r, '')
 
 	next(files)
 

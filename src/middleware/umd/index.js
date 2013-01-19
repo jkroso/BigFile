@@ -10,7 +10,7 @@
  */
 
 module.exports = function (code, next) {
-	next(umd(this.name, this._entry, code))
+	next(umd(this.name, this.entry, code))
 }
 
 function umd (name, entryPath, code) {

@@ -7,7 +7,7 @@
  */
 
 module.exports = function (code, next) {
-	next(wrap(this.name, this._entry, code))
+	next(wrap(this.name, this.entry, code))
 }
 
 function wrap (name, entryPath, code) {

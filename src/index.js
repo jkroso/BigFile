@@ -42,11 +42,6 @@ var proto = Build.prototype
 proto.__proto__ = Rack.prototype
 Emitter.mixin(proto)
 
-proto.entry = function (path) {
-	this._entry = path
-	return this
-}
-
 proto.debug = function (bool) {
 	this.options.debug = bool
 	return this
@@ -56,7 +51,7 @@ proto.include = function (p) {
 	if (p[0] === '.') {
 		p = resolve(dirname(module.parent.filename), p)
 	}
-	if (!this._entry) this.entry(p)
+	if (!this.entry) this.entry = p
 	this.graph.trace(p)
 	return this
 }
@@ -84,7 +79,7 @@ proto.minify = function (opts) {
 proto.run = function (fn) {
 	var self = this
 	if (fn) this.use(fn)
-	this.graph.then().end(function (files) {
+	this.graph.then(function (files) {
 		self.send(files)
 	})
 }
