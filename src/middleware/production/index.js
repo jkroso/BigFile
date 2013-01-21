@@ -2,6 +2,7 @@ var falafel = require('falafel')
   , minify = require('../../utils').minify
   , read = require('fs').readFileSync
   , dirname = require('path').dirname
+  , debug = require('debug')('bigfile:production')
 
 /*!
  * Load the require implementation
@@ -41,6 +42,15 @@ module.exports = function (files, next) {
 		return falafel(file.text, function (node) {
 			if (isRequire(node)) {
 				var name = node.arguments[0].value
+
+				if (name == null) {
+					debug('Dynamic require detected: %s at %s#%d',
+						node.source(),
+						file.path,
+						file.text.slice(0, node.range[0]).split('\n').length)
+					throw new Error('Dynamic requires are not possible in optimised builds')
+				}
+
 				var path = self.graph.resolveInternal(dirname(file.path), name)
 				
 				if (!path) throw new Error(name+' could not be found from '+file.path)

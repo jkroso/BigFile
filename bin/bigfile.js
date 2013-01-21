@@ -18,8 +18,9 @@ program.version(require('../package').version)
 		+'   though your entry script will still be initialized with a require()')
 	.option('-c, --compress', 'Minify the loader script of a development build')
 	.option('-l, --leave-paths', 'Don\'t shorten paths in the production build')
-	.option('-p, --production', 'Produce a highly optimised build')
-	.option('--plug <plugins...>', 'A comma seperated list of plugins. These are in addition to the default [javascript, json]', list)
+	.option('-P, --production', 'Produce a highly optimised build')
+	.option('-p, --plugins <plugins...>',
+		'A comma seperated list of plugins. These are in addition to the default [javascript, json]', list)
 	.option('--mw <middleware...>',
 		'A comma seperated list of middleware. Note: these will be used in place of the default rather than in addition', list)
 	.option('-g, --no-umd', 'Just export a global. Only available for production builds')

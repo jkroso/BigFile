@@ -33,6 +33,14 @@ module.exports = function (files, next) {
 		file.text = falafel(file.text, function (node) {
 			if (isRequire(node)) {
 				var path = node.arguments[0].value
+
+				if (path == null) {
+					debug('Dynamic require detected: %s at %s#%d',
+						node.source(),
+						file.path,
+						file.text.slice(0, node.range[0]).split('\n').length)
+					return
+				}
 				// only need to alter absolute paths
 				if (path[0] !== '/') return
 				path = path.replace(r, '')
