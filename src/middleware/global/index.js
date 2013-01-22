@@ -11,11 +11,11 @@ module.exports = function (code, next) {
 }
 
 function wrap (name, entryPath, code) {
-	var src = "!function (){"+ code
+	var src = "!function(){"+ code
 
 	if (name !== false) {
 		src += "window["+JSON.stringify(name) + "]="
 	}
-	src += "require("+JSON.stringify(entryPath)+")"+"}"
+	src += "require("+JSON.stringify(entryPath)+")"+"}()"
 	return src
 }

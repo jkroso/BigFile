@@ -1,6 +1,6 @@
 {
   "name": "bigfile",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Turn a mapping of modules into a browser suitable package",
   "main": "src/index.js",
   "devDependencies": {
@@ -16,7 +16,7 @@
     "emitter": "~0.5.0",
     "laissez-faire": "",
     "lodash": "",
-    "sourcegraph": "*",
+    "sourcegraph": "~0.4.1",
     "falafel": "",
     "when-all": "~0.1.0",
     "racks": "0.0.1",

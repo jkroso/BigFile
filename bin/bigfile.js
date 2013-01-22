@@ -90,8 +90,7 @@ process.stderr.write('Module exporting as: '.blue)
 process.stderr.write(program.export.blue.bold)
 process.stderr.write('\n')
 
-
-program.plug && program.plug.forEach(function (plugin) {
+program.plugins && program.plugins.forEach(function (plugin) {
 	console.warn('install plugin: %s'.blue, plugin)
 	build.plugin(plugin)
 })
@@ -162,7 +161,6 @@ if (files.length) {
 function run () {
 	build.run(function (code) {
 		process.stdout.write(code)
-		process.stderr.write('\n')
-		process.exit(0)
+		// process.exit(0)
 	})
 }
