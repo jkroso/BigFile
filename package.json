@@ -1,6 +1,6 @@
 {
   "name": "bigfile",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Turn a mapping of modules into a browser suitable package",
   "main": "src/index.js",
   "devDependencies": {
@@ -16,14 +16,15 @@
     "emitter": "~0.5.0",
     "laissez-faire": "",
     "lodash": "",
-    "sourcegraph": "~0.4.1",
+    "sourcegraph": "~0.4.2",
     "falafel": "",
     "when-all": "~0.1.0",
     "racks": "0.0.1",
     "winner": "~0.1.0",
     "debug": "~0.7.0",
     "async-forEach": "~0.1.0",
-    "prettyjson": "~0.7.1"
+    "prettyjson": "~0.7.1",
+    "jade": "~0.28.1"
   },
   "bundledDependencies": [
     "debug",
