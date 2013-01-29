@@ -161,6 +161,5 @@ if (files.length) {
 function run () {
 	build.run(function (code) {
 		process.stdout.write(code)
-		// process.exit(0)
 	})
 }

@@ -20,7 +20,7 @@ function Build (name) {
 
 	this.name = name === null 
 		? null 
-		: (name || 'undefined-bigfile-build')
+		: (name || 'undefined-build')
 	this._excludes = []
 	this._handlers = []
 	
@@ -122,6 +122,10 @@ proto.plugin = function () {
 		
 		plug.excludes && plug.excludes.forEach(function (regex) {
 			self.exclude(regex)
+		})
+
+		plug.dependencies && plug.dependencies.forEach(function (file) {
+			self.graph.addModule('/', file)			
 		})
 	}
 

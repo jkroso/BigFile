@@ -13,20 +13,20 @@ describe('the transform plugin', function (build) {
 		build = new Build().use('transform')
 	})
 	
-	it('should filter out all matching files', function (done) {
+	it('should transform matching files', function (done) {
 		var p = base+'/simple/has_dependency.js'
-		build.include(p)
-			.handle(/\.js/, function (file) {
-				file.text += '$$bigfile-signature$$'
-				return file
+		// Remove defualt handlers
+		build._handlers.length = 0
+		build.include(p).handle(/\.js/, function (file) {
+			file.text += '$$bigfile-signature$$'
+			return file
+		})
+		build.run(function (files) {
+			files.should.have.a.lengthOf(2)
+			files.forEach(function (file) {
+				file.text.should.include('$$bigfile-signature$$')
 			})
-			.use(function (files, next) {
-				files.should.have.a.lengthOf(2)
-				files.forEach(function (file) {
-					file.text.should.include('$$bigfile-signature$$')
-				})
-				next()
-			})
-			.run(function () {done()})
+			done()
+		})
 	})
 })
