@@ -15,7 +15,7 @@ exports.dependencies = [
 		text: [
 			'module.exports = function (text) {',
 			'	var style = document.createElement(\'style\')',
-			'	style.appendChild(document.createTextNode(JSON.stringify(text)))',
+			'	style.appendChild(document.createTextNode(text))',
 			'	document.getElementsByTagName(\'head\')[0].appendChild(style)',
 			'}'
 		].join('\n')

@@ -25,14 +25,13 @@ function require (path, parent){
 			'module',
 			'exports',
 			'require',
-			// Eval prevents the function wrapper being visible
 			// The source allows the browser to present this module as if it was a normal file
-			"eval("+JSON.stringify(code+'\n//@ sourceURL='+encodeURI(fullpath))+")"
-			// module
+			code+'\n//@ sourceURL='+encodeURI(fullpath)
 		).call(module.exports, module, module.exports,
 			// Relative require function
 			function (rp) {
-				return require('.' === rp[0] ? join(dirname(fullpath), rp) : rp, fullpath)
+				if (rp[0] === '.') rp = join(dirname(fullpath), rp)
+				return require(rp, fullpath)
 			}
 		)
 	}

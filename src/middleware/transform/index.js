@@ -21,18 +21,19 @@ module.exports = function (files, next) {
 			return (res && res[0].length) || 0
 		}, 1)
 
-		if (match) {
-			debug('File before %pj', file)
-			file = match.fn(file, options)
-			debug('File after %pj', file)
-			return file
-		} else {
+		if (!match) {
 			debug('No handler found for %s, it will be excluded', file.path)
+			return
 		}
-	})
-	// Remove those which returned nothing
-	.filter(Boolean)
-	// TODO: implment when-filter
 
-	all(files).end(next)
+		debug('File before %pj', file)
+		file = match.fn(file, options)
+		debug('File after %pj', file)
+		return file
+	})
+
+	all(files).end(function (files) {
+		// Remove those which returned nothing
+		next(files.filter(Boolean))
+	})
 }

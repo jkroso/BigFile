@@ -125,7 +125,8 @@ proto.plugin = function () {
 		})
 
 		plug.dependencies && plug.dependencies.forEach(function (file) {
-			self.graph.addModule('/', file)			
+			if (self.graph.has('/', file.path)) return
+			self.graph.addModule('/', file)
 		})
 	}
 

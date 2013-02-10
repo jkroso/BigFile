@@ -7,7 +7,6 @@ function require (index) {
 			'exports',
 			'require',
 			module
-			// "eval("+JSON.stringify(module+'\n//@ sourceURL=/'+index)+")"
 		)
 		.call((modules[index] = module = {exports:{}}).exports, 
 			module,

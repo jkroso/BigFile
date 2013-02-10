@@ -5,7 +5,12 @@ exports.handlers = [
 	{
 		if: /\.jade$/,
 		do: function (file, options) {
-			var fn = jade.compile(file.text, {
+			var requires = []
+			var text = file.text.replace(/^require\s*(.+)/mg, function (_, req) {
+				requires.push(req)
+				return ''
+			})
+			var fn = jade.compile(text, {
 					client: true,
 					compileDebug: options && options.debug,
 					filename: file.path
@@ -19,7 +24,9 @@ exports.handlers = [
 				'module.exports = function (locals) {',
 				'	return fn(locals, runtime.attrs, runtime.escape, runtime.rethrow, runtime.merge)',
 				'}'
-			].join('\n')
+			].concat(requires.map(function (req) {
+				return 'require(\''+req+'\')'
+			})).join('\n')
 
 			return file
 		}
@@ -27,15 +34,15 @@ exports.handlers = [
 ]
 
 var runtime = read(require.resolve('jade/lib/runtime'), 'utf-8')
-runtime += [
-	'',
-	'exports.rethrow = function rethrow(err, filename, lineno){',
-	'	err.path = filename',
-	'	err.message = (filename || \'Jade\') + \':\' + lineno + \' \'+ err.message',
-	'	throw err',
-	'}',
-	''
-].join('\n')
+	+ [
+		'',
+		'exports.rethrow = function rethrow(err, filename, lineno){',
+		'	err.path = filename',
+		'	err.message = (filename || \'Jade\') + \':\' + lineno + \' \'+ err.message',
+		'	throw err',
+		'}',
+		''
+	].join('\n')
 
 exports.dependencies = [
 	{

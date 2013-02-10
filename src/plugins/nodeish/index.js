@@ -9,7 +9,7 @@ exports.handlers = [
 			if (main) {
 				if (main[0].match(/\w/)) main = './'+main
 			} else {
-				throw new Error('No main!')
+				throw new Error(file.path+': has no `main` property')
 			}
 			
 			file.text = 'module.exports = require("'+main+'")'
