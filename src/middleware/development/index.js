@@ -59,7 +59,7 @@ module.exports = function (dict, next) {
 		requireCode,
 		nodeModulesCode(),
 		componentsCode(),
-		'var modules = ' + JSON.stringify(dict),
+		'var modules = ' + JSON.stringify(dict, null, '\t'),
 		'var checks = [node_modules, components]'
 	].join('\n')
 
