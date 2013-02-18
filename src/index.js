@@ -8,7 +8,6 @@ var Emitter = require('emitter')
 exports = module.exports = Build
 
 function Build (name) {
-	Emitter.call(this)
 	Rack.call(this)
 	this.graph = new Graph().use(
 		'nodeish', 
@@ -42,7 +41,7 @@ function Build (name) {
  */
 var proto = Build.prototype
 proto.__proto__ = Rack.prototype
-Emitter.mixin(proto)
+Emitter(proto)
 
 proto.debug = function (bool) {
 	this.options.debug = bool

@@ -1,4 +1,4 @@
-var debug = require('debug')('transform')
+var debug = require('debug')('bigfile:transform')
   , all = require('when-all')
   , winner = require('winner')
   , path = require('path')
