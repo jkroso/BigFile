@@ -11,7 +11,7 @@ function require (path, parent){
 	var fullpath = resolve(parent, path)
 	  , module = modules[fullpath]
 
-	if (module == null) throw new Error('failed to require "'+path+'" from '+parent)
+	if (module == null) throw Error('failed to require '+path+' from '+(parent || 'root'))
 
 	// It hasn't been loaded before
 	if (typeof module === 'string') {
@@ -55,15 +55,12 @@ function resolve (base, path) {
 			|| modules[path+'index.js'] && path+'index.js'
 			|| modules[path+'/index.js'] && path+'/index.js'
 	}
-	else {
-		while (true) {
-			for ( var i = 0, len = checks.length; i < len; i++ ) {
-				var res = checks[i](base, path, modules)
-				if (res != null) return res
-			}
-			if (base === '/') break
-			base = dirname(base)
-		}
+
+	while (true) {
+		var res = node_modules(base, path, modules)
+		if (res != null) return res
+		if (base === '/') break
+		base = dirname(base)
 	}
 }
 
