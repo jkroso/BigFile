@@ -121,7 +121,6 @@ proto.plugin = function () {
 		plug.excludes && plug.excludes.forEach(function (regex) {
 			self.exclude(regex)
 		})
-
 		plug.dependencies && plug.dependencies.forEach(function (file) {
 			if (self.graph.has('/', file.path)) return
 			self.graph.addModule('/', file)

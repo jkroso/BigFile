@@ -25,7 +25,7 @@ exports.handlers = [
 
 			// Install style 
 			data.styles && data.styles.forEach(function (style) {
-				file.text += '\nrequire("./'+style+'").install()'
+				file.text += '\nrequire("./'+style+'")'
 			})
 			
 			return file
