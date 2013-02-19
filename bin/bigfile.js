@@ -50,7 +50,7 @@ program.command('list')
 	.description('show available plugins and middleware')
 	.action(function (cmd) {
 		var list = fs.readdirSync(path.resolve(__dirname, '../src/plugins'))
-		// Don't show the ones that are included by defautl
+		// Don't show the ones that are included by default
 		list = list.filter(function (plugin) {
 			switch (plugin) {
 				case 'javascript':

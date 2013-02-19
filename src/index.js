@@ -11,7 +11,6 @@ function Build (name) {
 	Rack.call(this)
 	this.graph = new Graph().use(
 		'nodeish', 
-		'component', 
 		'javascript', 
 		'json', 
 		'css'

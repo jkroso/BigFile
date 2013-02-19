@@ -1,6 +1,7 @@
 var should = require('chai').should()
   , expect = require('chai').expect
   , Build = require('../src')
+  , Graph = require('sourcegraph')
   , vm = require('vm')
   , write = require('fs').writeFileSync
 
@@ -31,12 +32,9 @@ describe('the development plugin', function (build) {
 		build.include(p).use(function (code, next) {
 			code.should.include('function node_modules')
 				.and.include('function nodeishVariants')
-				.and.include('function componentVariants')
 				.and.include('function join')
 				.and.include('function normalize')
 				.and.include('function slice')
-				.and.include('function components')
-				.and.include('checks = [node_modules, components]')
 			next()
 		}).run(function () {done()})
 	})
@@ -73,6 +71,10 @@ describe('the development plugin', function (build) {
 
 	it('should be runnable when the modules use components', function (done) {
 		var p = base+'/cc/simple/component.json'
+		build.graph = new Graph().use(
+			'javascript',
+			'component'
+		)
 		build.include(p).use(function (code, next) {
 			code += '\nrequire('+JSON.stringify(p)+')'
 			// uncomment if you want to try running the code in a browser
@@ -87,6 +89,8 @@ describe('the development plugin', function (build) {
 			next()
 		}).run(function () {done()})
 	})
+
+
 
 	it('should be runnable when modules use remote paths', function (done) {
 		var p = base+'/remote/simple/index.js'

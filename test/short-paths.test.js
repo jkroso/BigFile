@@ -1,5 +1,6 @@
 var should = require('chai').should()
   , Build = require('../src')
+  , Graph = require('sourcegraph')
   , path = require('path')
   , vm = require('vm')
   , write = require('fs').writeFileSync
@@ -16,8 +17,9 @@ describe('the short-paths plugin', function (build) {
 
 	it('should produce runnable output', function (done) {
 		var p = path.join(__dirname, '../example/component/rack/component.json');
-		new Build('shortPaths')
-			.use('transform')
+		var build = new Build('shortPaths')
+		build.graph = new Graph().use('javascript', 'component')
+		build.use('transform')
 			.use('short-paths')
 			.use('dict')
 			.use('development')
@@ -26,7 +28,7 @@ describe('the short-paths plugin', function (build) {
 			.use(function (code, next) {
 				code += ';\nvar exporting = require("/rack/component.json");'
 				// uncomment if you want to try running the code in a browser
-				write(__dirname+'/tmp/file.js', code)
+				// write(__dirname+'/tmp/file.js', code)
 				var a = {}
 				vm.runInNewContext(code, a)
 				a.should.have.property('modules')

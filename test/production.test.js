@@ -1,6 +1,7 @@
 var should = require('chai').should()
   , expect = require('chai').expect
   , Build = require('../src')
+  , Graph = require('sourcegraph')
   , path = require('path')
   , vm = require('vm')
   , write = require('fs').writeFileSync
@@ -25,6 +26,7 @@ describe('the production plugin', function (build) {
 
 	it('should produce runnable output', function (done) {
 		var p = path.join(__dirname, '../example/component/rack/component.json')
+		build.graph = new Graph().use('javascript','component')
 		build.include(p).use(function (code, next) {
 			// uncomment if you want to try running the code in a browser
 			// write(__dirname+'/tmp/file.js', code)

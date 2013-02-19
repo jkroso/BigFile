@@ -1,6 +1,7 @@
 var should = require('chai').should()
   , expect = require('chai').expect
   , Build = require('../src')
+  , Graph = require('sourcegraph')
   , path = require('path')
   , vm = require('vm')
   , write = require('fs').writeFileSync
@@ -20,8 +21,9 @@ describe('the umd plugin', function (build) {
 
 	it('should work with the development plugins output', function (done) {
 		var p = path.join(__dirname, '../example/component/rack/component.json')
-		new Build('umd')
-			.use('transform')
+		var build = new Build('umd')
+		build.graph = new Graph().use('javascript', 'component')
+		build.use('transform')
 			.use('dict')
 			.use('development')
 			.use('umd')
@@ -41,8 +43,9 @@ describe('the umd plugin', function (build) {
 
 	it('should work with the production plugins output', function (done) {
 		var p = path.join(__dirname, '../example/component/rack/component.json')
-		new Build('umd')
-			.use('transform')
+		var build = new Build('umd')
+		build.graph = new Graph().use('javascript', 'component')
+		build.use('transform')
 			.use('production')
 			.use('umd')
 			.use('compress')
