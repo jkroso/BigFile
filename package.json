@@ -8,24 +8,26 @@
     "mocha": "*"
   },
   "dependencies": {
-    "uglify-js": "",
-    "commander": "",
+    "uglify-js": "~2.2.5",
+    "commander": "~1.1.1",
     "handlebars": "",
     "colors": "",
-    "detective": "",
-    "laissez-faire": "",
-    "sourcegraph": "*",
-    "falafel": "",
+    "detective": "~1.1.0",
+    "laissez-faire": "~0.10.1",
+    "sourcegraph": "~0.5.0",
+    "falafel": "~0.1.6",
     "when-all": "https://github.com/jkroso/when-all/tarball/master",
-    "async-forEach": "https://github.com/jkroso/async-forEach/tarball/master",
+    "async-forEach": "https://github.com/jkroso/async-forEach/tarball/0.1.0",
     "racks": "https://github.com/jkroso/racks/tarball/master",
-    "winner": "https://github.com/jkroso/winner/tarball/master",
+    "winner": "https://github.com/jkroso/winner/tarball/0.3.2",
     "debug": "~0.7.0",
     "prettyjson": "~0.7.1",
     "jade": "~0.28.1"
   },
   "bundledDependencies": [
-    "debug"
+    "debug",
+    "when-all",
+    "racks"
   ],
   "bin": {
     "bigfile": "bin/bigfile",
