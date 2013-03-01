@@ -59,7 +59,7 @@ describe('the development plugin', function (build) {
 	})
 
 	it('should be runnable when the modules use node_modules', function (done) {
-		var files = require('./fixtures/node/expandindex')
+		var files = require('./fixtures/node-expand-index.js')
 		new Build('compile', files)
 			.use('transform')
 			.use('dict')
