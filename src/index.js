@@ -1,21 +1,15 @@
 var Rack = require('racks')
-  , dirname = require('path').dirname
-  , resolve = require('path').resolve
   , debug = require('debug')('bigfile')
 
 module.exports = Build
 
 function Build (name, files) {
 	Rack.call(this)
-
 	this.files = files
-
+	this._handlers = []
 	this.name = name === null 
 		? null 
 		: (name || 'undefined-build')
-
-	this._handlers = []
-	
 	this.options = {
 		debug: true,
 		min: {
