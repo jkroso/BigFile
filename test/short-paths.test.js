@@ -1,45 +1,41 @@
-var should = require('chai').should()
+var expect = require('chai').expect
   , Build = require('../src')
-  , Graph = require('sourcegraph')
-  , path = require('path')
   , vm = require('vm')
   , write = require('fs').writeFileSync
+  , read = require('fs').readFileSync
 
 describe('the short-paths plugin', function (build) {
 	it('should load', function () {
-		var build = new Build()
-			.use('short-paths')
-			.plugin('component')
-
-		build._handlers.should.have.a.lengthOf(4)
-		build.stack.should.have.a.lengthOf(1)
+		var build = new Build().use('short-paths')
+		expect(build.stack).to.have.a.lengthOf(1)
 	})
 
 	it('should produce runnable output', function (done) {
-		var p = path.join(__dirname, '../example/component/rack/component.json');
-		var build = new Build('shortPaths')
-		build.graph = new Graph().use('javascript', 'component')
-		build.use('transform')
+		var path = require.resolve('./fixtures/nodeish.js')
+		var files = JSON.parse(read(path, 'utf-8'))
+		var build = new Build('shortPaths', files)
+		build.entry = '/path/to/racks/index.js'
+		build
+			.use('transform')
 			.use('short-paths')
 			.use('dict')
 			.use('development')
-			.plugin('component')
-			.include(p)
+			.plugin('javascript')
 			.use(function (code, next) {
-				code += ';\nvar exporting = require("/rack/component.json");'
 				// uncomment if you want to try running the code in a browser
-				// write(__dirname+'/tmp/file.js', code)
+				write(__dirname+'/tmp/file.js', code)
 				var a = {}
 				vm.runInNewContext(code, a)
-				a.should.have.property('modules')
+				expect(a).to.have.property('modules')
 					.that.is.an('object')
-				a.should.have.property('require')
+				expect(a).to.have.property('require')
 					.that.is.a('function')
-				a.should.have.property('exporting')
-					.that.is.a('function')
-					.and.have.property('name', 'Racks')
-				next()
+
+				expect(a.require('/rack/index.js'))
+					.to.be.be.a('function')
+
+				done()
 			})
-			.run(function () {done()})
+			.run()
 	})
 })

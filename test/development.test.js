@@ -14,95 +14,117 @@ describe('the development plugin', function (build) {
 			.use('transform')
 			.use('development')
 			.plugin('component')
+			.plugin('javascript')
+			.plugin('json')
 
 		build._handlers.should.have.a.lengthOf(4)
 		build.stack.should.have.a.lengthOf(3)
 	})
 
-	beforeEach(function () {
-		build = new Build()
+	it('should compile the modules into a large file', function (done) {
+		var files = require('./fixtures/simple')
+		new Build('compile', files)
 			.use('transform')
 			.use('dict')
 			.use('development')
-			.plugin('component')
-	})
-	
-	it('should compile the modules into a large file', function (done) {
-		var p = base+'/simple/has_dependency.js'
-		build.include(p).use(function (code, next) {
-			code.should.include('function node_modules')
-				.and.include('function nodeishVariants')
-				.and.include('function join')
-				.and.include('function normalize')
-				.and.include('function slice')
-			next()
-		}).run(function () {done()})
+			.use(function (code, next) {
+				code.should.include('function node_modules')
+					.and.include('function variants')
+					.and.include('function join')
+					.and.include('function normalize')
+					.and.include('function slice')
+				done()
+			})
+			.run()
 	})
 
 	it('should be runnable when the modules use relative paths', function (done) {
-		var p = base+'/simple/has_dependency.js'
-		build.include(p).use(function (code, next) {
-			var ret = vm.runInNewContext(code+';require('+JSON.stringify(p)+')')
-
-			expect(ret).to.deep.equal({
-				has_dependency: true,
-				dependency: {
-					simple: true
-				}
+		var files = require('./fixtures/simple')
+		new Build('compile', files)
+			.use('transform')
+			.use('dict')
+			.use('development')
+			.use(function (code, next) {
+				var ret = vm.runInNewContext(code+';require(\'/a\')')
+				expect(ret).to.deep.equal({
+					has_dependency: true,
+					dependency: {
+						simple: true
+					}
+				})
+				done()
 			})
-			next()
-		}).run(function () {done()})
+			.plugin('javascript')
+			.run()
 	})
 
 	it('should be runnable when the modules use node_modules', function (done) {
-		var p = base+'/node/expandindex/index.js'
-		build.include(p).use(function (code, next) {
-			code += '\nrequire('+JSON.stringify(p)+')'
-			// uncomment if you want to try running the code in a browser
-			// write(__dirname+'/tmp/file.js', code)
-			var ret = vm.runInNewContext(code)
-
-			expect(ret).to.deep.equal({
-				foo: 'foo/index.js'
+		var files = require('./fixtures/node/expandindex')
+		new Build('compile', files)
+			.use('transform')
+			.use('dict')
+			.use('development')
+			.use(function (code, next) {
+				code += ';require(\'/expandindex\')'
+				// uncomment if you want to try running the code in a browser
+				// write(__dirname+'/tmp/file.js', code)
+				var ret = vm.runInNewContext(code)
+				expect(ret).to.deep.equal({
+					foo:{
+						bar:'baz'
+					}
+				})
+				done()
 			})
-			next()
-		}).run(function () {done()})
+			.plugin('javascript')
+			.plugin('nodeish')
+			.run()
 	})
 
-	it('should be runnable when the modules use components', function (done) {
-		var p = base+'/cc/simple/component.json'
-		build.graph = new Graph().use(
-			'javascript',
-			'component'
-		)
-		build.include(p).use(function (code, next) {
-			code += '\nrequire('+JSON.stringify(p)+')'
-			// uncomment if you want to try running the code in a browser
-			// write(__dirname+'/tmp/file.js', code)
-			var ret = vm.runInNewContext(code)
+	// not supported anymore
+	it.skip('should be runnable when the modules use components', function (done) {
+		var files = require('./fixtures/simple-component')
+		new Build('compile_component', files)
+			.plugin('javascript')
+			.plugin('nodeish')
+			.plugin('component')
+			.use('transform')
+			.use('dict')
+			.use('development')
+			.use(function (code) {
+				code += ';require(\'/simple/component.json\')'
+				// uncomment if you want to try running the code in a browser
+				write(__dirname+'/tmp/file.js', code)
+				var ret = vm.runInNewContext(code)
 
-			expect(ret).to.deep.equal({
-				animal: {
-					inherit: 'inherit'
-				}
+				expect(ret).to.deep.equal({
+					animal: {
+						inherit: 'simple'
+					}
+				})
+				done()
 			})
-			next()
-		}).run(function () {done()})
+			.run()
 	})
-
-
 
 	it('should be runnable when modules use remote paths', function (done) {
-		var p = base+'/remote/simple/index.js'
-		build.include(p).use(function (code, next) {
-			code += '\nrequire('+JSON.stringify(p)+')'
-			// uncomment if you want to try running the code in a browser
-			// write(__dirname+'/tmp/file.js', code)
-			var ret = vm.runInNewContext(code)
-			expect(ret).to.exist
-				.and.have.property('title')
-				.and.have.property(13, 'enter')
-			next()
-		}).run(function () {done()})
+		var files = require('./fixtures/remote')
+		new Build('compile_remote', files)
+			.plugin('javascript')
+			.use('transform')
+			.use('dict')
+			.use('development')
+			.use(function (code) {
+				code += ';require(\'/remote\')'
+				// uncomment if you want to try running the code in a browser
+				// write(__dirname+'/tmp/file.js', code)
+				var ret = vm.runInNewContext(code)
+
+				expect(ret).to.exist
+					.and.have.property('names')
+					.and.have.property(13, 'enter')
+				done()
+			})
+			.run()
 	})
 })

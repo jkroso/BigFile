@@ -15,7 +15,6 @@ module.exports = function (files, next) {
 	  , options = this.options
 
 	files = files.map(function (file) {
-		// The best result is judged to be the one with the longest regex munch
 		var match = winner(handlers, function (handler) {
 			var res = file.path.match(handler.re)
 			return (res && res[0].length) || 0

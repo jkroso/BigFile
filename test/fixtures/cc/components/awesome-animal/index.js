@@ -1,1 +1,0 @@
-exports.inherit = require('inherit')

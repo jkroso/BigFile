@@ -11,17 +11,15 @@ var program = require('commander')
 require('colors')
 
 program.version(require('../package').version)
-  .usage('[options] <entry files...> usually there is only one')
+  .usage('[options]')
   .option('-x, --export [name]', 'Set the global export')
   .option('-c, --compress', 'Minify the loader script of a development build')
   .option('-l, --leave-paths', 'Don\'t shorten paths in the production build')
-  .option('-P, --production', 'Produce a highly optimised build')
-  .option('-p, --plugins <plugins...>',
-    'A comma seperated list of plugins. These are in addition to the default [javascript, json]', list)
-  .option('--mw <middleware...>',
-    'A comma seperated list of middleware. Note: these will be used in place of the default rather than in addition', list)
-  .option('-g, --no-umd', 'Just export a global. Only available for production builds')
+  .option('-p, --plugins <plugins...>', 'A comma seperated list of plugins', list)
+  .option('--mw <middleware...>', 'A comma seperated list of middleware', list)
   .option('-d, debug', 'bigfile takes any of node\'s debug options')
+  // .option('-P, --production', 'Produce a highly optimised build')
+  // .option('-g, --no-umd', 'Just export a global. Only available for production builds')
 
 function list (args) {
   return args.split(',')
@@ -78,77 +76,59 @@ if (program.export == null) {
   program.export = path.basename(process.cwd()).replace(/[^\w]/, '')
   debug('Inferred build name from path: %s', program.export)
 }
-
-var build = new Build(program.export)
 process.stderr.write('Module exporting as: '.blue)
 process.stderr.write(program.export.blue.bold)
 process.stderr.write('\n')
 
-// Explicit middleware
-if (program.mw) {
-  program.mw.forEach(function (middleware) {
-    console.warn('install middleware: %s'.blue, middleware)
-    build.use(middleware)
-  })
-}
-else if (program.production) {
-  build.use(
-    'filter',
-    'transform',
-    'production'
-  )
-  if (program.umd) {
-    build.use('umd')
-  } else {
-    build.use('global')
+// stdin
+var buf = ''
+process.stdin.setEncoding('utf8')
+process.stdin.on('data', function(chunk){ buf += chunk })
+process.stdin.on('end', build)
+process.stdin.resume()
+
+function build(){
+  var files = JSON.parse(buf)
+  var build = new Build(program.export, files)
+
+  for (var i = 0, len = files.length; i < len; i++) {
+    if (files[i].parents.length === 0) build.entry = files[i].path
   }
-  build.use('compress')
-} else {
-  build.use('filter', 'transform')
-  if (!program.leavePaths) build.use('short-paths')
-  build.use(
-    'dict',
-    'development',
-    'umd'
-  )
-  if (program.compress) {
-    // Will only compress the require implementation
-    build.use('compress')
-  }
-}
+  if (!build.entry) throw new Error('Unable to determine an entry file')
+  debug('Entry file determined as %s', build.entry)
 
-if (files.length) {
-  files.forEach(function (file) {
-    console.warn(('Including file: %j').green, file)
-    build.include(file)
-  })
-  run()
-} else {
-  var buf = ''
-  process.stdin.setEncoding('utf8')
-
-  process.stdin.on('data', function(chunk){ buf += chunk })
-
-  process.stdin.on('end', function(){
-    var files = JSON.parse(buf)
-    for (var i = 0, len = files.length; i < len; i++) {
-      if (files[i].parents.length === 0) build.entry = files[i].path
-    }
-    if (!build.entry) throw new Error('Unable to determine an entry file')
-    debug('Entry file determined as %s', build.entry)
-    // Needs to be stored on the sourcegraph since some middleware makes use
-    // of sourcegraphs methods
-    build.graph.data = files
-    // Create the mapping that sourcegraph expects
-    files.forEach(function (file) {
-      files[file.path] = file
+  // Explicit middleware
+  if (program.mw) {
+    program.mw.forEach(function (middleware) {
+      console.warn('install middleware: %s'.blue, middleware)
+      build.use(middleware)
     })
-    
-    run()
-  }).resume()
-}
+  }
+  // else if (program.production) {
+  //   build.use(
+  //     'filter',
+  //     'transform',
+  //     'production'
+  //   )
+  //   if (program.umd) {
+  //     build.use('umd')
+  //   } else {
+  //     build.use('global')
+  //   }
+  //   build.use('compress')
+  // } 
+  else {
+    build.use('transform')
+    if (!program.leavePaths) build.use('short-paths')
+    build.use('dict')
+    build.use('development')
+    build.use('umd')
+    if (program.compress) {
+      // Will only compress the require implementation
+      build.use('compress')
+    }
+  }
 
-function run () {
   program.plugins && program.plugins.forEach(function (plugin) {
     console.warn('install plugin: %s'.blue, plugin)
     build.plugin(plugin)

@@ -1,8 +1,22 @@
 var Build = require('../../src');
 
-new Build('simple')
-	.include('./simple.js')
-	.use(function (files, next) {
-		console.log(files.slice())
+var files = [
+	{
+		path: '/simple.js',
+		text: 'module.exports = simple example with no dependencies'
+	}
+];
+
+var build = new Build('simple', files)
+build.entry = '/simple.js'
+
+build
+	.plugin('javascript')
+	.use('transform')
+	.use('dict')
+	.use('development')
+	.use('umd')
+	.use(function (code, next) {
+		console.log(code)
 	})
 	.run()

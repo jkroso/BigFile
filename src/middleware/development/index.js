@@ -17,8 +17,8 @@ function nodeModulesCode () {
 	return [
 		node.hashSystem.toString()
 			.replace(/^function\s*/, 'function node_modules '),
-		node.variants.toString()
-	].join('\n')
+		node.variants
+	].join('\n\n')
 }
 
 /**

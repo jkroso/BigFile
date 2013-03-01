@@ -1,1 +1,0 @@
-exports.animal = require('animal')

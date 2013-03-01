@@ -2,6 +2,7 @@ var falafel = require('falafel')
   , minify = require('../../utils').minify
   , read = require('fs').readFileSync
   , dirname = require('path').dirname
+  // , Graph = require('sourcegraph')
   , debug = require('debug')('bigfile:production')
 
 /*!

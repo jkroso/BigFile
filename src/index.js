@@ -1,25 +1,19 @@
-var Emitter = require('emitter')
-  , Rack = require('racks')
-  , Graph = require('sourcegraph')
+var Rack = require('racks')
   , dirname = require('path').dirname
   , resolve = require('path').resolve
   , debug = require('debug')('bigfile')
 
-exports = module.exports = Build
+module.exports = Build
 
-function Build (name) {
+function Build (name, files) {
 	Rack.call(this)
-	this.graph = new Graph().use(
-		'nodeish', 
-		'javascript', 
-		'json', 
-		'css'
-	)
+
+	this.files = files
 
 	this.name = name === null 
 		? null 
 		: (name || 'undefined-build')
-	this._excludes = []
+
 	this._handlers = []
 	
 	this.options = {
@@ -30,38 +24,25 @@ function Build (name) {
 			leaveAst: false
 		}
 	}
-
-	// Ship with javascript by default
-	this.plugin('javascript', 'json')
 }
 
-/*!
- * Inherit from Emitter
- */
-var proto = Build.prototype
-proto.__proto__ = Rack.prototype
-Emitter(proto)
+// Inherit from Rack
+Build.prototype.__proto__ = Rack.prototype
 
-proto.debug = function (bool) {
+Build.filter = function(regex){
+	return function(files, next){
+		next(files.filter(function(file){
+			return !regex.test(file.path)
+		}))
+	}
+}
+
+Build.prototype.debug = function (bool) {
 	this.options.debug = bool
 	return this
 }
 
-proto.include = function (p) {
-	if (p[0] === '.') {
-		p = resolve(dirname(module.parent.filename), p)
-	}
-	if (!this.entry) this.entry = p
-	this.graph.trace(p)
-	return this
-}
-
-proto.exclude = function (re) {
-	this._excludes.push(re)
-	return this
-}
-
-proto.handle = function (re, fn) {
+Build.prototype.handle = function (re, fn) {
 	this._handlers.push({
 		re: re,
 		fn: fn
@@ -69,24 +50,21 @@ proto.handle = function (re, fn) {
 	return this
 }
 
-proto.minify = function (opts) {
+Build.prototype.minify = function (opts) {
 	this.options.min = opts === false 
 		? false 
 		: merge(this.options.min, opts || {})
 	return this
 }
 
-proto.run = function (fn) {
-	var self = this
+Build.prototype.run = function (fn) {
 	if (fn) this.use(fn)
-	this.graph.then(function (files) {
-		self.send(files)
-	}).throw()
+	this.send(this.files)
 }
 
 var use = Rack.prototype.use
 
-proto.use = function () {
+Build.prototype.use = function () {
 	// Handle several arguments
 	for (var i = 0, len = arguments.length; i < len; i++) {
 		var middleware = arguments[i]
@@ -100,7 +78,7 @@ proto.use = function () {
 	return this
 }
 
-proto.plugin = function () {
+Build.prototype.plugin = function () {
 	var self = this
 
 	for (var i = 0, len = arguments.length; i < len; i++) {
@@ -117,14 +95,10 @@ proto.plugin = function () {
 		
 		// TODO: this should be a deep merge
 		plug.options && merge(this.options, plug.options)
-		
-		plug.excludes && plug.excludes.forEach(function (regex) {
-			self.exclude(regex)
-		})
-		plug.dependencies && plug.dependencies.forEach(function (file) {
-			if (self.graph.has('/', file.path)) return
-			self.graph.addModule('/', file)
-		})
+
+		if (plug.dependencies) {
+			this.files = this.files.concat(plug.dependencies)
+		}
 	}
 
 	return this
