@@ -35,10 +35,12 @@ module.exports = function (files, next) {
 				var path = node.arguments[0].value
 
 				if (path == null) {
-					debug('Dynamic require detected: %s at %s#%d',
+					debug(
+						'Dynamic require detected: %s at %s#%d',
 						node.source(),
 						file.path,
-						file.text.slice(0, node.range[0]).split('\n').length)
+						file.text.slice(0, node.range[0]).split('\n').length
+					)
 					return
 				}
 				// only need to alter absolute paths
@@ -52,6 +54,9 @@ module.exports = function (files, next) {
 		return file
 	})
 
+	if (typeof this.entry != 'string') {
+		throw new Error('short-paths requires an `entry` property')
+	}
 	// Update the entry path 
 	this.entry = this.entry.replace(r, '')
 
