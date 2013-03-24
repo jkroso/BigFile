@@ -88,7 +88,12 @@ process.stdin.on('end', build)
 process.stdin.resume()
 
 function build(){
-  var files = JSON.parse(buf)
+  try {
+    var files = JSON.parse(buf)
+  } catch (e) {
+    e.message += ' (while parsing JSON from stdin)'
+    throw e
+  }
   var build = new Build(program.export, files)
 
   for (var i = 0, len = files.length; i < len; i++) {
