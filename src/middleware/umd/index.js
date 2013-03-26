@@ -21,12 +21,15 @@ function umd (name, entryPath, code) {
 	  , "	} else if (typeof define === 'function' && typeof define.amd  === 'object') {"
 	  , "		define(definition)"
 	  , "	} else {"
-	  , "		" + (name === 'null' || name === null ? "" : "context['"+name+"'] = ") + "definition()"
+	  , "		" + (name == 'null' || name == null ? "" : "context['"+name+"'] = ") + "definition()"
 	  , "	}"
 	  , "}(this, function () {"
 	   // indent and remove carriage returns
 	  , code.replace(/^/mg, '\t').replace(/\r/g, '')
-	  , "	return require("+JSON.stringify(entryPath)+")"
+	  , (name == 'require'
+				? "	return require"
+				: "	return require("+JSON.stringify(entryPath)+")"
+			)
 	  , "})"
 	].join('\n')
 }

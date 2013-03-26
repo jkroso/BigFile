@@ -7,6 +7,7 @@
  */
 
 function require (path, parent){
+	parent || (parent = '/')
 	// Determine the correct path
 	var fullpath = resolve(parent, path)
 	  , module = modules[fullpath]
