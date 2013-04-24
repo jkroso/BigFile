@@ -1,5 +1,5 @@
 var stylus = require('stylus')
-  , Promise = require('laissez-faire')
+  , Promise = require('laissez-faire/full')
 
 exports.handlers = [
 	{
