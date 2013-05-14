@@ -2,7 +2,6 @@
 var debug = require('debug')('bigfile:transform')
   , all = require('when-all')
   , winner = require('winner')
-  , path = require('path')
 
 /**
  * Apply handlers to the file types they match
@@ -13,28 +12,23 @@ var debug = require('debug')('bigfile:transform')
 
 module.exports = function (files, next) {
 	var handlers = this._handlers
-	  , options = this.options
+	var options = this.options
 
 	files = files.map(function (file) {
-		// TODO: better test
 		var match = winner(handlers, function (handler) {
-			var res = file.path.match(handler.re)
-			return (res && res[0].length) || 0
+			return handler.test(file)
 		}, 1)
 
-		if (!match) {
-			debug('No handler found for %p, it will be excluded', file.path)
-			return
+		if (match) {
+			debug('File before %j', file)
+			file = match(file, options)
+			debug('File after %j', file)
+		} else {
+			debug('No transformation applied to %p', file.path)
 		}
 
-		debug('File before %j', file)
-		file = match.fn(file, options)
-		debug('File after %j', file)
 		return file
 	})
 
-	all(files).end(function (files) {
-		// Remove `undefined`
-		next(files.filter(Boolean))
-	})
+	all(files).then(next)
 }

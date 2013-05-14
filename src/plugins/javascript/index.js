@@ -1,10 +1,17 @@
+
+
+exports.handlers = [ js ]
+
 /**
  * The do nothing handler
  */
 
-exports.handlers = [
-	{
-		if: /\.js$/,
-		do: function (a) {return a}
-	}
-]
+function js(a){
+	return a
+}
+
+js.test = function(file){
+	return (/\.js$/).test(file.path)
+		? 1
+		: 0
+}

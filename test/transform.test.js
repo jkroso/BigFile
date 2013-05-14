@@ -1,3 +1,4 @@
+
 var should = require('chai').should()
   , Build = require('../src')
 
@@ -15,6 +16,16 @@ describe('the transform plugin', function (build) {
 				files.forEach(function (file) {
 					file.text.should.include('$$signature$$')
 				})
+				done()
+			})
+	})
+
+	it('should allow pass unmatched files through unchanged', function (done) {
+		var files = require('./fixtures/aliases')
+		new Build('transform', files)
+			.use('transform')
+			.run(function (res) {
+				res.should.eql(files)
 				done()
 			})
 	})
