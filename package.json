@@ -1,6 +1,6 @@
 {
   "name": "bigfile",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "Turn a mapping of modules into a browser suitable package",
   "main": "src/index.js",
   "devDependencies": {
@@ -14,10 +14,10 @@
     "detective": "~1.1.0",
     "laissez-faire": "~0.12.2",
     "falafel": "~0.1.6",
-    "when-all": "https://github.com/jkroso/when-all/archive/0.3.0.tar.gz",
-    "racks": "https://github.com/jkroso/racks/archive/a8b98ae.tar.gz",
-    "winner": "https://github.com/jkroso/winner/archive/0.3.2.tar.gz",
-    "debug": "https://github.com/jkroso/debug/archive/master.tar.gz",
+    "when-all": "http://github.com/jkroso/when-all/archive/0.3.0.tar.gz",
+    "racks": "http://github.com/jkroso/racks/archive/a8b98ae.tar.gz",
+    "winner": "http://github.com/jkroso/winner/archive/0.3.2.tar.gz",
+    "debug": "http://github.com/jkroso/debug/archive/master.tar.gz",
     "jade": "~0.30.0"
   },
   "bundledDependencies": [

@@ -1,4 +1,4 @@
-var minify = require('../../utils').minify
+var minify = require('../utils').minify
 
 /**
  * Run whatever comes in through uglifyjs. This mostly just 
