@@ -1,52 +1,42 @@
+
 var jade = require('jade')
-  , read = require('fs').readFileSync
+var read = require('fs').readFileSync
 
-exports.handlers = [
-	{
-		if: /\.jade$/,
-		do: function (file, options) {
-			var requires = []
-			var text = file.text.replace(/^require\s*(.+)/mg, function (_, req) {
-				requires.push(req)
-				return ''
-			})
-			var fn = jade.compile(text, {
-					client: true,
-					compileDebug: options && options.debug,
-					filename: file.path
-				}).toString()
-				.replace(/anonymous/, '')
-				.replace(/\n[^\n]*/, '')
+exports.handlers = [ transform ]
 
-			file.text = [
-				'var runtime = require(\'/node_modules/jade-runtime.js\')',
-				'var fn = '+fn,
-				'module.exports = function (locals) {',
-				'	return fn(locals, runtime.attrs, runtime.escape, runtime.rethrow, runtime.merge)',
-				'}'
-			].concat(requires.map(function (req) {
-				return 'require(\''+req+'\')'
-			})).join('\n')
+function transform(file, options){
+	var requires = []
+	var text = file.text.replace(/^require\s*(.+)/mg, function (_, req) {
+		requires.push(req)
+		return ''
+	})
 
-			return file
-		}
-	}
-]
+	var fn = jade.compile(text, {
+			client: true,
+			compileDebug: options && options.debug,
+			filename: file.path,
+			pretty: false
+		}).toString()
 
-var runtime = read(require.resolve('jade/lib/runtime'), 'utf-8')
-	+ [
-		'',
-		'exports.rethrow = function rethrow(err, filename, lineno){',
-		'	err.path = filename',
-		'	err.message = (filename || \'Jade\') + \':\' + lineno + \' \'+ err.message',
-		'	throw err',
-		'}',
-		''
-	].join('\n')
+	file.text = [
+		'var jade = require(\'/node_modules/jade-runtime.js\')',
+		'module.exports = ' + fn
+	].concat(requires.map(function (req) {
+		return 'require(\'' + req.trim() + '\')'
+	})).join('\n')
+
+	return file
+}
+
+transform.test = function(file){
+	return (/\.jade$/).test(file.path)
+		? 1
+		: 0
+}
 
 exports.dependencies = [
 	{
 		path: '/node_modules/jade-runtime.js',
-		text: runtime
+		text: read(require.resolve('jade/lib/runtime'), 'utf-8')
 	}
 ]

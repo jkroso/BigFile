@@ -1,13 +1,15 @@
-exports.handlers = [
-	// crappy style sheets
-	{
-		if: /\.css$/,
-		do: function (file) {
-			file.text = 'require(\'/node_modules/css-install.js\')('+JSON.stringify(file.text)+')'
-			return file
-		}
-	}
-]
+exports.handlers = [ transform ]
+
+function transform(file){
+	file.text = 'require(\'/node_modules/css-install.js\')('+JSON.stringify(file.text)+')'
+	return file
+}
+
+transform.test = function(file){
+	return (/\.css$/).test(file.path)
+		? 1
+		: 0
+}
 
 exports.dependencies = [
 	{

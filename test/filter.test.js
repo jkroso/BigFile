@@ -1,7 +1,7 @@
 var should = require('chai').should()
   , Build = require('../src')
 
-describe('the filter middleware', function (build) {
+describe('filter middleware', function (build) {
 	it('should filter out all matching files', function (done) {
 		var files = require('./fixtures/simple')
 		new Build('filter', files)
