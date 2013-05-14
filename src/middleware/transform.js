@@ -1,3 +1,4 @@
+
 var debug = require('debug')('bigfile:transform')
   , all = require('when-all')
   , winner = require('winner')
@@ -15,24 +16,25 @@ module.exports = function (files, next) {
 	  , options = this.options
 
 	files = files.map(function (file) {
+		// TODO: better test
 		var match = winner(handlers, function (handler) {
 			var res = file.path.match(handler.re)
 			return (res && res[0].length) || 0
 		}, 1)
 
 		if (!match) {
-			debug('No handler found for %s, it will be excluded', file.path)
+			debug('No handler found for %p, it will be excluded', file.path)
 			return
 		}
 
-		debug('File before %pj', file)
+		debug('File before %j', file)
 		file = match.fn(file, options)
-		debug('File after %pj', file)
+		debug('File after %j', file)
 		return file
 	})
 
 	all(files).end(function (files) {
-		// Remove those which returned nothing
+		// Remove `undefined`
 		next(files.filter(Boolean))
 	})
 }

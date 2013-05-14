@@ -10,18 +10,15 @@
   "dependencies": {
     "uglify-js": "~2.2.5",
     "commander": "~1.1.1",
-    "handlebars": "*",
     "colors": "*",
     "detective": "~1.1.0",
-    "laissez-faire": "~0.12.0",
-    "sourcegraph": "~0.6.2",
+    "laissez-faire": "~0.12.2",
     "falafel": "~0.1.6",
     "when-all": "https://github.com/jkroso/when-all/archive/0.2.1.tar.gz",
     "racks": "https://github.com/jkroso/racks/archive/a8b98ae.tar.gz",
     "winner": "https://github.com/jkroso/winner/archive/0.3.2.tar.gz",
     "debug": "https://github.com/jkroso/debug/archive/master.tar.gz",
-    "jade": "~0.28.1",
-    "prettyjson": "~0.8.1"
+    "jade": "~0.28.1"
   },
   "bundledDependencies": [
     "debug",

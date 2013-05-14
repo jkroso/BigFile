@@ -1,38 +1,31 @@
 /**
  * Require the given path.
  *
- * @param {String} path   Full path to the required file
- * @param {String} parent The file which this call originated from
- * @return {Object} module.exports
+ * @param {String} path
+ * @param {String} parent
+ * @return {Any} module.exports
  */
 
 function require (path, parent){
 	parent || (parent = '/')
-	// Determine the correct path
+
 	var fullpath = resolve(parent, path)
-	  , module = modules[fullpath]
+	if (!(fullpath in modules)) throw Error('failed to require '+path+' from '+parent)
+	var module = modules[fullpath]
 
-	if (module == null) throw Error('failed to require '+path+' from '+(parent || 'root'))
-
-	// It hasn't been loaded before
-	if (typeof module === 'string') {
-		var code = module
-		module = {
-			src: code,
-			exports: {}
-		}
-		modules[fullpath] = module
+	if (!module.loaded) {
 		Function(
 			'module',
 			'exports',
 			'require',
-			// The source allows the browser to present this module as if it was a normal file
-			code+'\n//@ sourceURL='+encodeURI(fullpath)
+			// sourceURL tells the browser we are evaling a file
+			module.source + '\n//@ sourceURL=' + encodeURI(fullpath)
 		).call(module.exports, module, module.exports,
-			// Relative require function
-			function (rp) {
-				if (rp[0] === '.') rp = join(dirname(fullpath), rp)
-				return require(rp, fullpath)
+			// relative `require` function
+			function(path){
+				var base = dirname(fullpath)
+				if (path[0] == '.') path = join(base, path)
+				return require(path, base)
 			}
 		)
 	}
@@ -49,47 +42,111 @@ function require (path, parent){
  */
 
 function resolve (base, path) {
-	if (path.match(/^\/|(?:[a-zA-Z]+:)/)) {
-		return modules[path] && path
-			|| modules[path+'.js'] && path+'.js'
-			|| modules[path+'.json'] && path+'.json'
-			|| modules[path+'index.js'] && path+'index.js'
-			|| modules[path+'/index.js'] && path+'/index.js'
+	// absolute
+	if (/^\/|(?:\w+:\/\/)/.test(path)) {
+		return complete(path)
+	} else if (/^\./.test(path)) {
+		// todo: fix join for urls
+		return complete(join(base, path))
 	}
 
+	// walk up looking in node_modules
 	while (true) {
-		var res = node_modules(base, path, modules)
-		if (res != null) return res
-		if (base === '/') break
+		var res = complete(join(base, 'node_modules', path))
+		if (res) return res
+		if (base == '/') break
 		base = dirname(base)
 	}
 }
 
-function dirname (path) {
-	if (path[path.length - 1] === '/') path = path.slice(0, -1)
-	return path.split('/').slice(0,-1).join('/') || '/'
+/**
+ * get the parent directory path
+ *
+ * @param {String} path
+ * @return {String}
+ */
+
+function dirname(path){
+	var i = path.lastIndexOf('/')
+	if (i < 0) return '.'
+	return path.slice(0, i)
 }
 
-function normalize (path) {
-	var isAbsolute = path[0] === '/'
-	  , res = []
-	path = path.split('/')
+/**
+ * Clean up a messy path
+ *
+ *   normalize('/foo//baz/quux/..') // => '/foo/baz'
+ *
+ * @param {String} path
+ * @return {String}
+ */
 
-	for (var i = 0, len = path.length; i < len; i++) {
-		var seg = path[i]
-		if (seg === '..') res.pop()
-		else if (seg && seg !== '.') res.push(seg)
+function normalize(path){
+  var segs = path.split('/')
+  if (segs.length <= 1) return path
+  var res = [segs[0]]
+
+  for (var i = 1, len = segs.length; i < len; i++) {
+    var seg = segs[i]
+    if (seg === '' || seg === '.') continue
+    if (seg === '..') res.pop()
+    else res.push(seg)
+  }
+
+  return res.join('/')
+}
+
+/**
+ * Concatenate a sequence of path segments to generate one flat path
+ * 
+ * @param {String} [...]
+ * @return {String}
+ */
+
+function join(path){
+	for (var i = 1, len = arguments.length; i < len; i++) {
+		path += '/' + arguments[i]
 	}
-
-	return (isAbsolute ? '/' : '') + res.join('/')
+  return normalize(path)
 }
 
-function join () {
-	return normalize(slice(arguments).filter(function(p) {
-		return p
-	}).join('/'))
+/**
+ * Produce an ordered list of paths to try
+ * 
+ * @param {String} path
+ * @return {Array} of path
+ * @private
+ */
+
+function completions(path){
+	// A directory
+	if (path.match(/\/$/)) {
+		return [
+			path+'index.js',
+			path+'index.json',
+			path+'package.json'
+		]
+	}
+	// could be a directory or a file
+	return [
+		path,
+		path+'.js',
+		path+'.json',
+		path+'/index.js',
+		path+'/index.json',
+		path+'/package.json'
+	]
 }
 
-function slice (args) {
-	return Array.prototype.slice.call(args)
+/**
+ * find the first matching path completion
+ *
+ * @param {String} path
+ * @return {String} full path of the module
+ */
+
+function complete(path) {
+	return completions(path).filter(function (path) {
+		return path in modules
+	})[0]
 }

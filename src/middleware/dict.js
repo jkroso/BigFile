@@ -8,6 +8,7 @@
 
 module.exports = function (files, next) {
 	next(files.reduce(function (o, next) {
-		return o[next.path] = next.text, o
+		o[next.path] = next.text
+		return o
 	}, {}))
 }

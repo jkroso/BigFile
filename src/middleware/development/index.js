@@ -1,25 +1,13 @@
+
 var read = require('fs').readFileSync
 
 /*!
- * Load the require implementation
+ * Load run time source
  */
+
 var requireCode = read(__dirname+'/require.js', 'utf-8')
+var hydrationCode = read(__dirname+'/hydrate.js', 'utf-8')
 
-/**
- * Compile the code needed to resolve a component module
- * 
- * @return {String}
- * @api private
- */
-
-function nodeModulesCode () {
-	var node = require('sourcegraph/src/plugins/nodeish')
-	return [
-		node.hashSystem.toString()
-			.replace(/^function\s*/, 'function node_modules '),
-		node.variants
-	].join('\n\n')
-}
 
 /**
  * Wrap a mapping of modules with the environment required to run them
@@ -29,12 +17,48 @@ function nodeModulesCode () {
  * @return {String}
  */
 
-module.exports = function (dict, next) {
+module.exports = function (files, next) {
 	var code = [
+		'var modules = ' + json(mapFiles(files)),
+		'var aliases = ' + json(mapAliases(files)),
+		hydrationCode,
 		requireCode,
-		nodeModulesCode(),
-		'var modules = ' + JSON.stringify(dict, null, '\t'),
 	].join('\n')
 
 	next(code)
+}
+
+function json(obj){
+	return JSON.stringify(obj, null, 2)
+}
+
+/**
+ * map real path to their text
+ * 
+ * @param {Array} files
+ * @return {Object}
+ */
+
+function mapFiles(files){
+	return files.reduce(function(map, file){
+		map[file.path] = file.text
+		return map
+	}, {})
+}
+
+/**
+ * map aliases to their real paths
+ * 
+ * @param {Array} files
+ * @return {Object}
+ */
+
+function mapAliases(files){
+	return files.reduce(function(map, file){
+		if (!('aliases' in map)) return map
+		return file.aliases.reduce(function(map, alias){
+			map[alias] = file.path
+			return map
+		}, map)
+	}, {})
 }

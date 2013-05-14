@@ -25,14 +25,13 @@ describe('the development plugin', function (build) {
 		var files = require('./fixtures/simple')
 		new Build('compile', files)
 			.use('transform')
-			.use('dict')
 			.use('development')
+			.plugin('javascript')
 			.use(function (code, next) {
-				code.should.include('function node_modules')
-					.and.include('function variants')
+				code.should.include('function completions')
 					.and.include('function join')
 					.and.include('function normalize')
-					.and.include('function slice')
+					.and.include('exports.simple = true')
 				done()
 			})
 			.run()
@@ -42,7 +41,6 @@ describe('the development plugin', function (build) {
 		var files = require('./fixtures/simple')
 		new Build('compile', files)
 			.use('transform')
-			.use('dict')
 			.use('development')
 			.use(function (code, next) {
 				var ret = vm.runInNewContext(code+';require(\'/a\')')
@@ -62,7 +60,6 @@ describe('the development plugin', function (build) {
 		var files = require('./fixtures/node-expand-index.js')
 		new Build('compile', files)
 			.use('transform')
-			.use('dict')
 			.use('development')
 			.use(function (code, next) {
 				code += ';require(\'/expandindex\')'
@@ -81,38 +78,11 @@ describe('the development plugin', function (build) {
 			.run()
 	})
 
-	// not supported anymore
-	it.skip('should be runnable when the modules use components', function (done) {
-		var files = require('./fixtures/simple-component')
-		new Build('compile_component', files)
-			.plugin('javascript')
-			.plugin('nodeish')
-			.plugin('component')
-			.use('transform')
-			.use('dict')
-			.use('development')
-			.use(function (code) {
-				code += ';require(\'/simple/component.json\')'
-				// uncomment if you want to try running the code in a browser
-				write(__dirname+'/tmp/file.js', code)
-				var ret = vm.runInNewContext(code)
-
-				expect(ret).to.deep.equal({
-					animal: {
-						inherit: 'simple'
-					}
-				})
-				done()
-			})
-			.run()
-	})
-
 	it('should be runnable when modules use remote paths', function (done) {
 		var files = require('./fixtures/remote')
 		new Build('compile_remote', files)
 			.plugin('javascript')
 			.use('transform')
-			.use('dict')
 			.use('development')
 			.use(function (code) {
 				code += ';require(\'/remote\')'
