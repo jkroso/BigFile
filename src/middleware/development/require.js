@@ -14,6 +14,7 @@ function require (path, parent){
 	var module = modules[fullpath]
 
 	if (!module.loaded) {
+		module.loaded = true
 		Function(
 			'module',
 			'exports',
