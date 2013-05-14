@@ -126,7 +126,6 @@ function build(){
   else {
     build.use('transform')
     if (!program.leavePaths) build.use('short-paths')
-    build.use('dict')
     build.use('development')
     build.use('umd')
     if (program.compress) {
