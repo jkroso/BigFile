@@ -54,7 +54,7 @@ function resolve (base, path) {
 	while (true) {
 		var res = complete(join(base, 'node_modules', path))
 		if (res) return res
-		if (base == '/') break
+		if (base == '/' || base == '.') break
 		base = dirname(base)
 	}
 }
@@ -69,7 +69,7 @@ function resolve (base, path) {
 function dirname(path){
 	var i = path.lastIndexOf('/')
 	if (i < 0) return '.'
-	return path.slice(0, i)
+	return path.slice(0, i) || '/'
 }
 
 /**

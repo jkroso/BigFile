@@ -18,6 +18,7 @@ var hydrationCode = read(__dirname+'/hydrate.js', 'utf-8')
  */
 
 module.exports = function (files, next) {
+	debugger;
 	var code = [
 		'var modules = ' + json(mapFiles(files)),
 		'var aliases = ' + json(mapAliases(files)),
@@ -55,7 +56,7 @@ function mapFiles(files){
 
 function mapAliases(files){
 	return files.reduce(function(map, file){
-		if (!('aliases' in map)) return map
+		if (!('aliases' in file)) return map
 		return file.aliases.reduce(function(map, alias){
 			map[alias] = file.path
 			return map

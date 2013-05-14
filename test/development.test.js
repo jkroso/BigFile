@@ -1,27 +1,13 @@
 var should = require('chai').should()
   , expect = require('chai').expect
   , Build = require('../src')
-  , Graph = require('sourcegraph')
   , vm = require('vm')
   , write = require('fs').writeFileSync
 
 var base = __dirname +'/fixtures'
 
 describe('the development plugin', function (build) {
-	it('should load', function () {
-		var build = new Build()
-			.use('dict')
-			.use('transform')
-			.use('development')
-			.plugin('component')
-			.plugin('javascript')
-			.plugin('json')
-
-		build._handlers.should.have.a.lengthOf(4)
-		build.stack.should.have.a.lengthOf(3)
-	})
-
-	it('should compile the modules into a large file', function (done) {
+	it('should compile to a string', function (done) {
 		var files = require('./fixtures/simple')
 		new Build('compile', files)
 			.use('transform')
@@ -37,7 +23,7 @@ describe('the development plugin', function (build) {
 			.run()
 	})
 
-	it('should be runnable when the modules use relative paths', function (done) {
+	it('should support relative paths', function (done) {
 		var files = require('./fixtures/simple')
 		new Build('compile', files)
 			.use('transform')
@@ -56,7 +42,7 @@ describe('the development plugin', function (build) {
 			.run()
 	})
 
-	it('should be runnable when the modules use node_modules', function (done) {
+	it('should support npm style packages', function (done) {
 		var files = require('./fixtures/node-expand-index.js')
 		new Build('compile', files)
 			.use('transform')
@@ -73,12 +59,11 @@ describe('the development plugin', function (build) {
 				})
 				done()
 			})
-			.plugin('javascript')
 			.plugin('nodeish')
 			.run()
 	})
 
-	it('should be runnable when modules use remote paths', function (done) {
+	it('should support remote paths', function (done) {
 		var files = require('./fixtures/remote')
 		new Build('compile_remote', files)
 			.plugin('javascript')
@@ -93,6 +78,25 @@ describe('the development plugin', function (build) {
 				expect(ret).to.exist
 					.and.have.property('names')
 					.and.have.property(13, 'enter')
+				done()
+			})
+			.run()
+	})
+
+	it('should support aliased modules', function (done) {
+		var files = require('./fixtures/aliases')
+		new Build('aliases', files)
+			.use('transform')
+			.use('development')
+			.plugin('javascript')
+			.use(function (code) {
+				code += ';require("/expandindex")'
+				// uncomment if you want to try running the code in a browser
+				// write(__dirname+'/tmp/file.js', code)
+				var ret = vm.runInNewContext(code)
+
+				expect(ret).to.exist
+					.and.have.property('foo')
 				done()
 			})
 			.run()
