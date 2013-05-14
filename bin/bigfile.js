@@ -4,7 +4,6 @@ var program = require('commander')
   , Build = require('../src')
   , path = require('path')
   , all = require('when-all')
-  , renderJSON = require('prettyjson').render
   , fs = require('fs')
   , debug = require('debug')('bigfile:cli')
 
@@ -61,7 +60,9 @@ program.command('list')
       return file.replace(/\.js$/, '')
     }
     function render (list) {
-      return renderJSON(list.map(removeExt).sort()).replace(/^/gm, '    ')
+      return list.map(removeExt).sort().forEach(function(item){
+        console.log(('  '+item).green)
+      })
     }
     process.exit(0)
   })

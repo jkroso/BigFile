@@ -2,7 +2,7 @@
 var should = require('chai').should()
   , Build = require('../src')
 
-describe('the transform plugin', function (build) {
+describe('transform middleware', function (build) {
 	it('should transform matching files', function (done) {
 		var files = require('./fixtures/simple')
 		new Build('transform', files)

@@ -1,12 +1,14 @@
-var should = require('chai').should()
-  , expect = require('chai').expect
+
+var chai = require('chai') 
+  , should = chai.should()
+  , expect = chai.expect
   , Build = require('../src')
   , vm = require('vm')
   , write = require('fs').writeFileSync
 
 var base = __dirname +'/fixtures'
 
-describe('the development plugin', function (build) {
+describe('development middleware', function (build) {
 	it('should compile to a string', function (done) {
 		var files = require('./fixtures/simple')
 		new Build('compile', files)

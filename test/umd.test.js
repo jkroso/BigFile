@@ -5,12 +5,7 @@ var should = require('chai').should()
   , write = require('fs').writeFileSync
   , read = require('fs').readFileSync
 
-describe('the umd plugin', function (build) {
-	it('should load', function () {
-		var build = new Build().use('umd')
-		build.stack.should.have.a.lengthOf(1)
-	})
-
+describe('umd middleware', function (build) {
 	it('should work with the development plugins output', function (done) {
 		var path = require.resolve('./fixtures/nodeish.js')
 		var files = JSON.parse(read(path, 'utf-8'))
@@ -18,7 +13,6 @@ describe('the umd plugin', function (build) {
 		build.entry = '/path/to/rack/index.js'
 		build
 			.use('transform')
-			.use('dict')
 			.use('development')
 			.use('umd')
 			.plugin('javascript')

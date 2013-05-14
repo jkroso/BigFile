@@ -17,8 +17,7 @@
     "when-all": "https://github.com/jkroso/when-all/archive/0.3.0.tar.gz",
     "racks": "https://github.com/jkroso/racks/archive/a8b98ae.tar.gz",
     "winner": "https://github.com/jkroso/winner/archive/0.3.2.tar.gz",
-    "debug": "https://github.com/jkroso/debug/archive/master.tar.gz",
-    "jade": "~0.28.1"
+    "debug": "https://github.com/jkroso/debug/archive/master.tar.gz"
   },
   "bundledDependencies": [
     "debug",
