@@ -12,7 +12,7 @@
     "commander": "~1.1.1",
     "colors": "*",
     "detective": "~1.1.0",
-    "laissez-faire": "~0.12.2",
+    "laissez-faire": "~0.12.3",
     "falafel": "~0.1.6",
     "when-all": "http://github.com/jkroso/when-all/archive/0.3.0.tar.gz",
     "racks": "http://github.com/jkroso/racks/archive/a8b98ae.tar.gz",
