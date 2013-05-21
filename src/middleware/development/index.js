@@ -6,8 +6,6 @@ var read = require('fs').readFileSync
  */
 
 var requireCode = read(__dirname+'/require.js', 'utf-8')
-var hydrationCode = read(__dirname+'/hydrate.js', 'utf-8')
-
 
 /**
  * Wrap a mapping of modules with the environment required to run them
@@ -21,7 +19,6 @@ module.exports = function (files, next) {
 	var code = [
 		'var modules = ' + json(mapFiles(files)),
 		'var aliases = ' + json(mapAliases(files)),
-		hydrationCode,
 		requireCode,
 	].join('\n')
 
