@@ -1,3 +1,25 @@
+
+/**
+ * give each module an identity
+ */
+
+for (var file in modules) {
+	modules[file] = {
+		source: modules[file],
+		loaded: false,
+		exports: {}
+	}
+}
+
+/**
+ * add aliases to the module map
+ */
+
+for (var alias in aliases) {
+	if (alias in modules) continue
+	modules[alias] = modules[aliases[alias]] 
+}
+
 /**
  * Require the given path.
  *
@@ -10,7 +32,8 @@ function require (path, parent){
 	parent || (parent = '/')
 
 	var fullpath = resolve(parent, path)
-	if (!(fullpath in modules)) throw Error('failed to require '+path+' from '+parent)
+	if (!fullpath) throw Error('failed to require '+path+' from '+parent)
+	if (fullpath in aliases) fullpath = aliases[fullpath]
 	var module = modules[fullpath]
 
 	if (!module.loaded) {

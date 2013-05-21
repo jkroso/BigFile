@@ -78,5 +78,15 @@ describe('development middleware', function (build) {
 				done()
 			}).send(require('./fixtures/aliases'))
 		})
+
+		it('requiring from aliased files', function (done) {
+			build.use(function (code) {
+				code += ';require("/project/index.js")'
+				// write(__dirname+'/tmp/file.js', code)
+				var ret = vm.runInNewContext(code)
+				expect(ret).to.eql({a:{b:{c:true}}})
+				done()
+			}).send(require('./fixtures/alias2'))
+		})
 	})
 })

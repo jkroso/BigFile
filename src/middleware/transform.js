@@ -30,5 +30,5 @@ module.exports = function (files, next) {
 		return file
 	})
 
-	all(files).then(next)
+	all(files).read(next)
 }
