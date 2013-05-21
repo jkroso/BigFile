@@ -1,10 +1,9 @@
-Reporter = spec
+REPORTER=dot
 
 test:
 	@node_modules/.bin/mocha \
-		--reporter $(Reporter) \
-		--slow 2s \
-		--globals Cookie,CookieJar,CookieAccessInfo \
+		--reporter $(REPORTER) \
+		--slow 100 \
 		test/*.test.js
 
 .PHONY: test
