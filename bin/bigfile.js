@@ -125,7 +125,7 @@ function build(){
   // } 
   else {
     build.use('transform')
-    if (!program.leavePaths) build.use('short-paths')
+    if (!program.leavePaths) build.use('quick-path-shorten')
     build.use('development')
     build.use('umd')
     if (program.compress) {
