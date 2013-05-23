@@ -13,33 +13,29 @@ var commonDir = require('path/common')
  */
 
 module.exports = function (files, next) {
-	var nmreg = /^\/node_modules\//
+	// treat packin packages as top level node_modules
+	chop(files, new RegExp('^'+process.env.HOME+'/.packin/-'), '/node_modules')
+
 	// extract paths
-	var paths = files.reduce(function(paths, file){
-		paths.push(file.path)
-		if (file.aliases) return paths.concat(file.aliases)
-		return paths
-	}, []).filter(function (path) {
-		return !nmreg.test(path)
-	})
+	var paths = files
+		.reduce(function(paths, file){
+			paths.push(file.path)
+			if (file.aliases) return paths.concat(file.aliases)
+			return paths
+		}, [])
+		// ignore top level deps
+		.filter(function (path) {
+			return !(/^\/node_modules\//).test(path)
+		})
 
 	var dir = commonDir(paths)
 	debug('excess path = %s', dir)
 
 	// Nothing we can do
-	if (dir === '/') next(files)
+	if (dir === '/') return next(files)
 	
-	// apply the chop
 	dir = new RegExp('^'+dir)
-	files.forEach(function (file) {
-		file.path = file.path.replace(dir, '')
-		var aliases = file.aliases
-		if (aliases && aliases.length) {
-			file.aliases = aliases.map(function(path){
-				return path.replace(dir, '')
-			})
-		}
-	})
+	chop(files, dir)
 
 	if (typeof this.entry != 'string') {
 		throw new Error('short-paths requires an `entry` property')
@@ -49,4 +45,25 @@ module.exports = function (files, next) {
 	this.entry = this.entry.replace(dir, '')
 
 	next(files)
+}
+
+/**
+ * apply a chop to all files
+ * 
+ * @param {Array} files
+ * @param {RegExp} regex
+ * @param {String} [add='']
+ */
+
+function chop(files, regex, add){
+	add || (add = '')
+	files.forEach(function (file) {
+		file.path = file.path.replace(regex, add)
+		var aliases = file.aliases
+		if (aliases && aliases.length) {
+			file.aliases = aliases.map(function(path){
+				return path.replace(regex, add)
+			})
+		}
+	})
 }
