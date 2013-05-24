@@ -1,6 +1,6 @@
 {
   "name": "bigfile",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Turn a mapping of modules into a browser suitable package",
   "main": "src/index.js",
   "devDependencies": {
@@ -20,7 +20,8 @@
     "winner": "http://github.com/jkroso/winner/archive/0.3.2.tar.gz",
     "debug": "http://github.com/jkroso/debug/archive/master.tar.gz",
     "path": "http://github.com/jkroso/path/tarball/1.1.0",
-    "jade": "~0.30.0"
+    "jade": "~0.30.0",
+    "stylus": "~0.32.1"
   },
   "bundledDependencies": [
     "debug",
@@ -29,9 +30,6 @@
   "bin": {
     "bigfile": "bin/bigfile",
     "_bigfile": "bin/_bigfile"
-  },
-  "scripts": {
-    "test": "make test"
   },
   "repository": {
     "type": "git",

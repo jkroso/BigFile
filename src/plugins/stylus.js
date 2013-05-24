@@ -1,26 +1,25 @@
 var stylus = require('stylus')
   , Promise = require('laissez-faire/full')
 
-exports.handlers = [
-	{
-		if: /\.styl$/,
-		do: function (file, options) {
-			var promise = new Promise
+exports.handlers = [ TransformStylus ]
 
-			stylus(file.text)
-				.set('filename', file.path)
-				.render(function(err, css){
-					if (err) promise.reject(err)
-					else {
-						file.text = 'require(\'/node_modules/css-install.js\')('+JSON.stringify(css)+')'
-						promise.resolve(file)
-					}
-				})
+function TransformStylus(file, options) {
+	var promise = new Promise
+	stylus(file.text)
+		.set('filename', file.path)
+		.render(function(err, css){
+			if (err) promise.reject(err)
+			else {
+				file.text = 'require(\'/node_modules/css-install.js\')('+JSON.stringify(css)+')'
+				promise.resolve(file)
+			}
+		})
+	return promise
+}
 
-			return promise
-		}
-	}
-]
+TransformStylus.test = function(file){
+	if (/\.styl$/.test(file.path)) return 1
+}
 
 exports.dependencies = [
 	{
