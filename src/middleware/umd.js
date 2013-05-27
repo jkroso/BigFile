@@ -31,5 +31,6 @@ function umd (name, entryPath, code) {
 				: "	return require("+JSON.stringify(entryPath)+")"
 			)
 	  , "})"
+	  , ""
 	].join('\n')
 }
