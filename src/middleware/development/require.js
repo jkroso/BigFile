@@ -43,7 +43,7 @@ function require (path, parent){
 			'exports',
 			'require',
 			// sourceURL tells the browser we are evaling a file
-			module.source + '\n//@ sourceURL=' + encodeURI(fullpath)
+			module.source + '\n//@ sourceURL=' + encodeURI(prettyPath(fullpath))
 		).call(module.exports, module, module.exports,
 			// relative `require` function
 			function(path){
@@ -54,6 +54,13 @@ function require (path, parent){
 		)
 	}
 	return module.exports
+}
+
+function prettyPath(path){
+	if (/github\.com\/([^\/]+)\/([^\/]+)\/tarball\/([^\/]+)/.test(path)) {
+		return RegExp.$1+'/'+RegExp.$2+'@'+RegExp.$3
+	}
+	return path
 }
 
 /**
