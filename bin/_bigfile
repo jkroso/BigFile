@@ -95,13 +95,17 @@ function build(){
     e.message += ' (while parsing JSON from stdin)'
     throw e
   }
-  var build = new Build(program.export, files)
-
+  var entry
   for (var i = 0, len = files.length; i < len; i++) {
-    if (files[i].parents.length === 0) build.entry = files[i].path
+    if (!files[i].parents.length) {
+      entry = files[i].path
+      break
+    }
   }
-  if (!build.entry) throw new Error('Unable to determine an entry file')
-  debug('Entry file determined as %s', build.entry)
+  if (!entry) throw new Error('Unable to determine an entry file')
+  debug('entry file determined as %s', entry)
+  
+  var build = new Build(program.export, entry)
 
   // Explicit middleware
   if (program.mw) {
@@ -139,7 +143,7 @@ function build(){
     build.plugin(plugin)
   })
 
-  build.run(function (code) {
+  build.use(function(code){
     process.stdout.write(code)
-  })
+  }).send(files)
 }

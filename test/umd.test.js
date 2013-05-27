@@ -1,14 +1,13 @@
 
-var should = require('chai').should()
+var chai = require('./chai')
   , Build = require('../src')
   , vm = require('vm')
   , write = require('fs').writeFileSync
+  , clone = require('clone')
 
 describe('umd middleware', function (build) {
 	it('should work with the development plugins output', function (done) {
-		var build = new Build('umd')
-		build.entry = '/path/to/rack/index.js'
-		build
+		new Build('umd', '/path/to/rack/index.js')
 			.use('transform')
 			.use('development')
 			.use('umd')
@@ -19,6 +18,6 @@ describe('umd middleware', function (build) {
 				a.should.have.property('umd')
 					.that.is.a('function')
 				done()
-			}).send(require('./fixtures/nodeish'))
+			}).send(clone(require('./fixtures/nodeish')))
 	})
 })
