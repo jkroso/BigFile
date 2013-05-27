@@ -7,16 +7,11 @@ var files = [
 	}
 ];
 
-var build = new Build('simple', files)
-build.entry = '/simple.js'
-
-build
-	.plugin('javascript')
+new Build('simple', '/simple.js')
 	.use('transform')
-	.use('dict')
 	.use('development')
 	.use('umd')
 	.use(function (code, next) {
 		console.log(code)
 	})
-	.run()
+	.send(files)
