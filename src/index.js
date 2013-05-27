@@ -7,16 +7,18 @@ module.exports = Build
 /**
  * configuration and middleware hub
  * 
- * @param {String} [name]
+ * @param {String} [name='myProject']
+ * @param {String} [entry] path
  */
 
-function Build (name) {
+function Build (name, entry) {
 	Rack.call(this)
 	this._extras = []
 	this._handlers = []
+	this.entry = entry || ''
 	this.name = name === null 
 		? null 
-		: (name || 'undefined-build')
+		: (name || 'myProject')
 	this.options = {
 		debug: true,
 		min: {
