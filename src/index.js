@@ -8,12 +8,11 @@ module.exports = Build
  * configuration and middleware hub
  * 
  * @param {String} [name]
- * @param {Array} files to compile
  */
 
-function Build (name, files) {
+function Build (name) {
 	Rack.call(this)
-	this.files = files
+	this._extras = []
 	this._handlers = []
 	this.name = name === null 
 		? null 
@@ -84,19 +83,8 @@ Build.prototype.minify = function (opts) {
 	return this
 }
 
-/**
- * run the build
- * 
- * @param {Function} fn
- * @return {this}
- */
-
-Build.prototype.run = function (fn) {
-	if (fn) this.use(fn)
-	this.send(this.files)
-}
-
 var use = Rack.prototype.use
+var send = Rack.prototype.send
 
 /**
  * add middleware
@@ -112,6 +100,16 @@ Build.prototype.use = function (middleware) {
 	}
 	use.call(this, middleware)
 	return this
+}
+
+/**
+ * run the build with `files`
+ * 
+ * @param {Array} files
+ */
+
+Build.prototype.send = function(files){
+	send.call(this, this._extras.concat(files))
 }
 
 /**
@@ -134,7 +132,7 @@ Build.prototype.plugin = function (plug) {
 	plug.options && merge(this.options, plug.options)
 
 	if (plug.dependencies) {
-		this.files = this.files.concat(plug.dependencies)
+		this._extras = this._extras.concat(plug.dependencies)
 	}
 
 	return this

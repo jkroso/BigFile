@@ -1,32 +1,32 @@
 
-var should = require('chai').should()
+var chai = require('./chai')
   , Build = require('../src')
 
 describe('transform middleware', function (build) {
 	it('should transform matching files', function (done) {
-		var files = require('./fixtures/simple')
-		new Build('transform', files)
+		new Build('transform')
 			.handle(/\.js/, function (file) {
 				file.text += '$$signature$$'
 				return file
 			})
 			.use('transform')
-			.run(function (files) {
+			.use(function (files) {
 				files.should.have.a.lengthOf(2)
 				files.forEach(function (file) {
 					file.text.should.include('$$signature$$')
 				})
 				done()
-			})
+			}).send(require('./fixtures/simple'))
 	})
 
 	it('should allow pass unmatched files through unchanged', function (done) {
 		var files = require('./fixtures/aliases')
-		new Build('transform', files)
+		new Build('transform')
 			.use('transform')
-			.run(function (res) {
+			.use(function (res) {
 				res.should.eql(files)
 				done()
 			})
+			.send(files)
 	})
 })

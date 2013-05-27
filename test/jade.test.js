@@ -1,4 +1,4 @@
-var should = require('chai').should()
+var chai = require('./chai')
   , Build = require('../src')
   , path = require('path')
   , vm = require('vm')
@@ -6,12 +6,10 @@ var should = require('chai').should()
 
 describe('the jade plugin', function (build) {
 	it('should work with single file templates', function (done) {
-		var files = require('./fixtures/jade-simple.js')
-		var b = new Build('jade', files)
+		var b = new Build('jade')
 			.use('transform')
 			.use('development')
 			.use('umd')
-			.plugin('javascript')
 			.plugin('jade')
 			.use(function (code) {
 				// uncomment if you want to try running the code in a browser
@@ -24,12 +22,11 @@ describe('the jade plugin', function (build) {
 				done()
 			})
 			b.entry = '/jade/index.js'
-			b.run()
+			b.send(require('./fixtures/jade-simple'))
 	})
 
 	it('should work with require statements', function (done) {
-		var files = require('./fixtures/jade-requires.js')
-		var b = new Build('jade', files)
+		var b = new Build('jade')
 			.use('transform')
 			.use('development')
 			.use('umd')
@@ -43,7 +40,7 @@ describe('the jade plugin', function (build) {
 				done()
 			})
 			b.entry = '/jade/index.jade'
-			b.run()
+			b.send(require('./fixtures/jade-requires'))
 	})
 
 	// I don't need this atm
@@ -51,7 +48,6 @@ describe('the jade plugin', function (build) {
 		var p = base + 'inherit.js'
 		build.include(p)
 		build.run(function (code, next) {
-			// uncomment if you want to try running the code in a browser
 			// write(__dirname+'/tmp/file.js', code)
 			var a = {}
 			vm.runInNewContext(code, a)
