@@ -57,8 +57,8 @@ function require (path, parent){
 }
 
 function prettyPath(path){
-	if (/github\.com\/([^\/]+)\/([^\/]+)\/tarball\/([^\/]+)/.test(path)) {
-		return RegExp.$1+'/'+RegExp.$2+'@'+RegExp.$3
+	if (/github\.com\/([^\/]+)\/([^\/]+)\/tarball\/([^\/]+)\/(.*)/.test(path)) {
+		return RegExp.$1+'/'+RegExp.$2+'@'+RegExp.$3 + '/' + RegExp.$4
 	}
 	return path
 }
