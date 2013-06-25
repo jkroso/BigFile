@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 
 var program = require('commander')
+  , debug = require('debug')('bigfile:cli')
   , Build = require('../src')
   , path = require('path')
-  , all = require('when-all')
   , fs = require('fs')
-  , debug = require('debug')('bigfile:cli')
 
 require('colors')
 

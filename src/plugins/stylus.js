@@ -1,20 +1,20 @@
 var stylus = require('stylus')
-  , Promise = require('laissez-faire/full')
+var Result = require('result')
 
 exports.handlers = [ TransformStylus ]
 
 function TransformStylus(file, options) {
-	var promise = new Promise
+	var result = new Result
 	stylus(file.text)
 		.set('filename', file.path)
 		.render(function(err, css){
-			if (err) promise.reject(err)
+			if (err) result.error(err)
 			else {
 				file.text = 'require(\'/node_modules/css-install.js\')('+JSON.stringify(css)+')'
-				promise.resolve(file)
+				result.write(file)
 			}
 		})
-	return promise
+	return result
 }
 
 TransformStylus.test = function(file){

@@ -1,8 +1,8 @@
 var chai = require('./chai')
+  , clone = require('clone-component')
   , Build = require('../src')
   , vm = require('vm')
   , fs = require('fs')
-  , clone = require('clone')
 
 describe('short-paths middleware', function (build) {
 	it('should produce runnable output', function (done) {

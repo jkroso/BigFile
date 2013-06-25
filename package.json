@@ -1,35 +1,34 @@
 {
   "name": "bigfile",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Turn a mapping of modules into a browser suitable package",
   "main": "src/index.js",
   "devDependencies": {
-    "chai": "*",
-    "mocha": "*",
-    "clone": "http://github.com/jkroso/clone/tarball/0.2.1"
+    "chai": "1.7.1",
+    "mocha": "1.11.0",
+    "clone-component": "http://github.com/jkroso/clone/tarball/0.2.1"
   },
   "dependencies": {
-    "uglify-js": "~2.2.5",
-    "commander": "~1.1.1",
-    "colors": "*",
-    "detective": "~1.1.0",
-    "laissez-faire": "~0.12.4",
-    "falafel": "~0.1.6",
-    "when-all": "http://github.com/jkroso/when-all/tarball/0.3.0",
+    "debug": "http://github.com/jkroso/debug/tarball/bb5a3e91475d83785768229f49a3730d60529423",
     "racks": "http://github.com/jkroso/racks/tarball/a8b98ae",
     "winner": "http://github.com/jkroso/winner/tarball/0.3.2",
-    "debug": "http://github.com/jkroso/debug/tarball/master",
     "path": "http://github.com/jkroso/path/tarball/1.1.0",
-    "jade": "~0.30.0",
-    "stylus": "~0.32.1"
+    "detective": "2.1.2",
+    "uglify-js": "2.3.6",
+    "commander": "1.2.0",
+    "when-all": "0.4.3",
+    "stylus": "~0.32.1",
+    "falafel": "0.2.1",
+    "result": "0.3.0",
+    "jade": "~0.31.2",
+    "colors": "0.6.0-1"
   },
-  "bundledDependencies": [
-    "debug",
-    "racks"
-  ],
   "bin": {
     "bigfile": "bin/bigfile",
     "_bigfile": "bin/_bigfile"
+  },
+  "scripts": {
+    "install": "npm dedupe"
   },
   "repository": {
     "type": "git",

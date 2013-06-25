@@ -1,9 +1,9 @@
 
 var chai = require('./chai')
+  , clone = require('clone-component')
   , Build = require('../src')
   , vm = require('vm')
   , write = require('fs').writeFileSync
-  , clone = require('clone')
 
 describe('umd middleware', function (build) {
 	it('should work with the development plugins output', function (done) {
