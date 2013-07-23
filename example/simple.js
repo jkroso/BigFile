@@ -1,4 +1,4 @@
-var Build = require('../../src');
+var Build = require('..')
 
 var files = [
 	{
@@ -11,7 +11,7 @@ new Build('simple', '/simple.js')
 	.use('transform')
 	.use('development')
 	.use('umd')
-	.use(function (code, next) {
+	.send(files)
+	.read(function(code){
 		console.log(code)
 	})
-	.send(files)

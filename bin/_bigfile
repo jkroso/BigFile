@@ -2,8 +2,8 @@
 
 var program = require('commander')
   , debug = require('debug')('bigfile:cli')
-  , Build = require('../src')
   , path = require('path')
+  , Build = require('..')
   , fs = require('fs')
 
 require('colors')
@@ -26,13 +26,13 @@ function list (args) {
 program.on('--help', function () {
   console.log('  Examples: ')
   console.log('  - Basic development build')
-  console.log('    $ bigfile src/index.js'.grey)
+  console.log('    $ bigfile src/index.js')
   console.log('')
   console.log('  - Basic production build')
-  console.log('    $ bigfile -P src/index.js'.grey)
+  console.log('    $ bigfile -P src/index.js')
   console.log('')
   console.log('  - With debugging enabled; this enables you to step through the build process')
-  console.log('    $ bigfile src/index.js debug'.grey)
+  console.log('    $ bigfile src/index.js debug')
   console.log('')
 })
 
@@ -49,20 +49,24 @@ program.command('list')
       return true
     })
     console.log('')
-    console.log('  Available plugins: \n%s', render(list))
+    console.log('  Available plugins: \n')
+    render(list)
     console.log('')
     var list = fs.readdirSync(path.resolve(__dirname, '../src/middleware'))
-    console.log('  Available middleware: \n%s', render(list))
+    console.log('  Available middleware: \n')
+    render(list)
     console.log('')
 
+    function render (list) {
+      return list.map(removeExt).sort().forEach(function(item){
+        console.log('    %s', item)
+      })
+    }
+    
     function removeExt (file) {
       return file.replace(/\.js$/, '')
     }
-    function render (list) {
-      return list.map(removeExt).sort().forEach(function(item){
-        console.log(('  '+item).green)
-      })
-    }
+
     process.exit(0)
   })
 
@@ -142,7 +146,7 @@ function build(){
     build.plugin(plugin)
   })
 
-  build.use(function(code){
+  build.send(files).read(function(code){
     process.stdout.write(code)
-  }).send(files)
+  })
 }

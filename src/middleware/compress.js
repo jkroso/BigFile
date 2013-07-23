@@ -6,14 +6,13 @@ var minify = require('../utils').minify
  * which in some cases may provide significant size reductions
  * 
  * @param {String} files
- * @param {Function} next
  * @return {String}
  */
 
-module.exports = function (code, next) {
-	next(minify(code, {
+module.exports = function(code){
+	return minify(code, {
 		compress: true,
 		beautify: false,
 		leaveAst: false
-	}))
+	})
 }

@@ -8,11 +8,10 @@ var commonDir = require('path/common')
  * absolute path 
  *
  * @param {Array} files
- * @param {Function} next
  * @return {Array}
  */
 
-module.exports = function (files, next) {
+module.exports = function(files){
 	// treat packin packages as top level node_modules
 	chop(files, new RegExp('^'+process.env.HOME+'/.packin/-'), '/node_modules')
 
@@ -32,7 +31,7 @@ module.exports = function (files, next) {
 	debug('excess path = %s', dir)
 
 	// Nothing we can do
-	if (dir === '/') return next(files)
+	if (dir === '/') return files
 	
 	dir = new RegExp('^'+dir)
 	chop(files, dir)
@@ -44,7 +43,7 @@ module.exports = function (files, next) {
 	// Update the entry path 
 	this.entry = this.entry.replace(dir, '')
 
-	next(files)
+	return files
 }
 
 /**

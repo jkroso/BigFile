@@ -1,7 +1,7 @@
 
 var debug = require('debug')('bigfile:transform')
-  , all = require('when-all')
   , winner = require('winner')
+  , map = require('map/async')
 
 /**
  * Apply handlers to the file types they match
@@ -10,25 +10,23 @@ var debug = require('debug')('bigfile:transform')
  * @param {Function} next
  */
 
-module.exports = function (files, next) {
+module.exports = function(files){
 	var handlers = this._handlers
 	var options = this.options
 
-	files = files.map(function (file) {
+	return map(files, function(file){
 		var match = winner(handlers, function (handler) {
 			return handler.test(file)
 		}, 1)
 
 		if (match) {
-			debug('File before %j', file)
+			debug('before %j', file)
 			file = match(file, options)
-			debug('File after %j', file)
+			debug('after %j', file)
 		} else {
-			debug('No transformation applied to %p', file.path)
+			debug('no transformation applied to %p', file.path)
 		}
 
 		return file
 	})
-
-	all(files).read(next)
 }

@@ -1,12 +1,12 @@
 
 var chai = require('./chai')
   , clone = require('clone-component')
-  , Build = require('../src')
-  , vm = require('vm')
   , write = require('fs').writeFileSync
+  , Build = require('..')
+  , vm = require('vm')
 
-describe('umd middleware', function (build) {
-	it('should work with the development plugins output', function (done) {
+describe('umd middleware', function(){
+	it('should work with the development plugins output', function(done){
 		new Build('umd', '/path/to/rack/index.js')
 			.use('transform')
 			.use('development')
@@ -17,7 +17,7 @@ describe('umd middleware', function (build) {
 				vm.runInNewContext(code, a)
 				a.should.have.property('umd')
 					.that.is.a('function')
-				done()
 			}).send(clone(require('./fixtures/nodeish')))
+				.node(done)
 	})
 })

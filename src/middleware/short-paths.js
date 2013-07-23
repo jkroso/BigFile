@@ -1,5 +1,7 @@
+
+var debug = require('debug')('bigfile:short-paths')
+var commonDir = require('path/common')
 var falafel = require('falafel')
-  , debug = require('debug')('bigfile:short-paths')
 
 /**
  * Chop the fat of the local paths.
@@ -10,13 +12,12 @@ var falafel = require('falafel')
  * relative to one another. 
  *
  * @param {Array} files
- * @param {Function} next
  * @return {Array}
  */
 
-module.exports = function (files, next) {
+module.exports = function(files){
 	var nmreg = /^\/node_modules\//
-	var paths = files.map(function (file) {
+	var paths = files.map(function(file){
 		return file.path
 	}).filter(function (path) {
 		return !nmreg.test(path)
@@ -24,7 +25,7 @@ module.exports = function (files, next) {
 	var dir = commonDir(paths)
 	debug('Excess path = %s', dir)
 	// Nothing we can do
-	if (dir === '/') next(files)
+	if (dir === '/') return files
 
 	var r = new RegExp('^'+dir)
 
@@ -60,70 +61,16 @@ module.exports = function (files, next) {
 	// Update the entry path 
 	this.entry = this.entry.replace(r, '')
 
-	next(files)
+	return files
 
-	/*!
-	 * Test if an AST node is a call to "require"
-	 */
-	function isRequire (node) {
-		return node.type === 'CallExpression'
-			&& (node = node.callee).type === 'Identifier'
-			&& node.name === 'require'
-	}
-}
-
-function dirname (path){
-  return path.split('/').slice(0, -1).join('/') || '.'; 
 }
 
 /**
- * Split a path into its components
- *
- * @param {String} path 
- * @return {Array}
+ * Test if an AST node is a call to "require"
  */
 
-function split (path) {
-  if (path[0] === '/') path = path.slice(1)
-  if (path[path.length - 1] === '/') path = path.slice(0, -1)
-  return path.split('/')
-}
-
-/**
- * Find the lowest common ancestor between several absolute paths
- *
- * @param {String} paths... pass as many as you like
- * @return {String}
- */
-
-function commonDir (first) {
-  if (first instanceof Array) return commonDir.apply(null, first)
-  if (!first) return '/'
-  first = dirname(first)
-  if (first === '.') return '/'
-  first = split(first)
-
-  for (var i = 1, len = arguments.length; i < len; i++) {
-    first = compare(first, split(arguments[i]))
-  }
-
-  return '/' + first.join('/')
-}
-
-/**
- * Find the closest common ancestor between two paths
- *
- * @param {Array} a
- * @param {Array} b
- * @return {Array}
- * @api private
- */
-
-function compare (a, b) {
-  for (var i = 0, len = a.length; i < len; i++) {
-    if (a[i] !== b[i]) {
-      return a.slice(0, i)
-    }
-  }
-  return a
+function isRequire (node) {
+	return node.type === 'CallExpression'
+		&& (node = node.callee).type === 'Identifier'
+		&& node.name === 'require'
 }

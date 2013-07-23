@@ -6,9 +6,9 @@
  * @return {Object}
  */
 
-module.exports = function (files, next) {
-	next(files.reduce(function (o, next) {
+module.exports = function(files, next){
+	return files.reduce(function(o, next){
 		o[next.path] = next.text
 		return o
-	}, {}))
+	}, {})
 }

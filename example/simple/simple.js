@@ -1,1 +1,0 @@
-module.exports = 'simple example with no dependencies'

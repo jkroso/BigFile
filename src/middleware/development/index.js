@@ -15,14 +15,13 @@ var requireCode = read(__dirname+'/require.js', 'utf-8')
  * @return {String}
  */
 
-module.exports = function (files, next) {
-	var code = [
+module.exports = function (files) {
+	return [
 		'var modules = ' + json(mapFiles(files)),
+		'',
 		'var aliases = ' + json(mapAliases(files)),
 		requireCode,
 	].join('\n')
-
-	next(code)
 }
 
 function json(obj){

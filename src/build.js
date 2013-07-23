@@ -1,6 +1,6 @@
 
-var Rack = require('racks')
 var debug = require('debug')('bigfile')
+var when = require('when')
 
 module.exports = Build
 
@@ -12,9 +12,9 @@ module.exports = Build
  */
 
 function Build (name, entry) {
-	Rack.call(this)
-	this._extras = []
 	this._handlers = []
+	this._extraFiles = []
+	this._transformations = []
 	this.entry = entry || ''
 	this.name = name === null 
 		? null 
@@ -26,24 +26,6 @@ function Build (name, entry) {
 			beautify: true,
 			leaveAst: false
 		}
-	}
-}
-
-// Inherit from Rack
-Build.prototype.__proto__ = Rack.prototype
-
-/**
- * create filtering middleware
- * 
- * @param {RegExp} regex
- * @return {Function}
- */
-
-Build.filter = function(regex){
-	return function(files, next){
-		next(files.filter(function(file){
-			return !regex.test(file.path)
-		}))
 	}
 }
 
@@ -78,40 +60,42 @@ Build.prototype.handle = function (re, fn) {
 	return this
 }
 
-Build.prototype.minify = function (opts) {
+Build.prototype.minify = function(opts){
 	this.options.min = opts === false 
 		? false 
 		: merge(this.options.min, opts || {})
 	return this
 }
 
-var use = Rack.prototype.use
-var send = Rack.prototype.send
-
 /**
- * add middleware
+ * add a transformation
  * 
- * @param {String|Function} middleware
+ * @param {String|Function} fn
  * @return {this}
  */
 
-Build.prototype.use = function (middleware) {
-	if (typeof middleware === 'string') {
-		debug('loading middleware: %s', middleware)
-		middleware = require(__dirname+'/middleware/'+middleware)
+Build.prototype.use = function(fn){
+	if (typeof fn === 'string') {
+		debug('loading middleware: %s', fn)
+		fn = require(__dirname+'/middleware/'+fn)
 	}
-	use.call(this, middleware)
+	this._transformations.push(fn)
 	return this
 }
 
 /**
- * run the build with `files`
- * 
- * @param {Array} files
+ * run the build
  */
 
 Build.prototype.send = function(files){
-	send.call(this, this._extras.concat(files))
+	var trans = this._transformations.slice(1)
+	var fn = this._transformations[0]
+	var self = this
+	return trans.reduce(function(res, fn){
+		return when(res, function(arg){
+			return fn.call(self, arg)
+		})
+	}, fn.call(this, this._extraFiles.concat(files)))
 }
 
 /**
@@ -121,20 +105,21 @@ Build.prototype.send = function(files){
  * @return {this}
  */
 
-Build.prototype.plugin = function (plug) {
+Build.prototype.plugin = function(plug){
 	if (typeof plug === 'string') {
 		debug('Loading plugin: %s', plug)
 		plug = require(__dirname+'/plugins/'+plug)
 	}
 
-	if ('handlers' in plug)
+	if ('handlers' in plug) {
 		this._handlers = this._handlers.concat(plug.handlers)
+	}
 	
 	// TODO: this should be a deep merge
 	plug.options && merge(this.options, plug.options)
 
 	if (plug.dependencies) {
-		this._extras = this._extras.concat(plug.dependencies)
+		this._extraFiles = this._extraFiles.concat(plug.dependencies)
 	}
 
 	return this
@@ -144,7 +129,7 @@ Build.prototype.plugin = function (plug) {
  * Merge helper
  */
 
-function merge (a, b) {
+function merge(a, b){
 	for (var prop in b) {
 		a[prop] = b[prop]
 	}

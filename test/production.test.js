@@ -1,16 +1,14 @@
 
-var should = require('chai').should()
-  , expect = require('chai').expect
-  , Build = require('../src')
-  , path = require('path')
-  , vm = require('vm')
+var chai = require('./chai')
   , write = require('fs').writeFileSync
+  , path = require('path')
+  , Build = require('..')
+  , vm = require('vm')
 
-describe.skip('production middleware', function (build) {
+describe.skip('production middleware', function(){
 	// production middleware depends on sourcegraph
-	it('should produce runnable output', function (done) {
-		var files = require('./fixtures/nodeish.js')
-		build = new Build('production', files)
+	it('should produce runnable output', function(done){
+		var build = new Build('production')
 			.use('transform')
 			.use('production')
 			.use(function (code, next) {
@@ -26,6 +24,6 @@ describe.skip('production middleware', function (build) {
 				done()
 			})
 		build.entry = '/racks/index.js'
-		build.run()
+		build.send(require('./fixtures/nodeish.js')).node(done)
 	})
 })

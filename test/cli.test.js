@@ -1,9 +1,8 @@
 
 var chai = require('./chai')
-  , Build = require('../src')
-  , vm = require('vm')
-  , write = require('fs').writeFileSync
   , spawn = require('child_process').spawn
+  , write = require('fs').writeFileSync
+  , vm = require('vm')
 
 var file = require.resolve('../bin/_bigfile')
 var entry = require.resolve('../example/simple/simple')
@@ -15,7 +14,7 @@ describe('cli', function (build) {
 		child.stdout.on('data', function(d){
 				code += d
 			}).on('end', function(){
-				// write(__dirname+'/tmp/file.js', code)
+				write(__dirname+'/tmp/file.js', code)
 				var a = {}
 				vm.runInNewContext(code, a)
 				a.should.have.property('test')

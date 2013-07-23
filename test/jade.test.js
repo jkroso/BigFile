@@ -1,5 +1,5 @@
 var chai = require('./chai')
-  , Build = require('../src')
+  , Build = require('..')
   , path = require('path')
   , vm = require('vm')
   , write = require('fs').writeFileSync
@@ -19,10 +19,9 @@ describe('the jade plugin', function (build) {
 				a.should.have.property('jade')
 					.that.is.an('object')
 					.that.have.property('text', '<p>uno</p>')
-				done()
 			})
 			b.entry = '/jade/index.js'
-			b.send(require('./fixtures/jade-simple'))
+			b.send(require('./fixtures/jade-simple')).node(done)
 	})
 
 	it('should work with require statements', function (done) {
@@ -37,14 +36,13 @@ describe('the jade plugin', function (build) {
 				code.should.include('/node_modules/css-install')
 				code.should.include('/node_modules/jade-runtime')
 				code.should.include('#user {border: blue;}')
-				done()
 			})
 			b.entry = '/jade/index.jade'
-			b.send(require('./fixtures/jade-requires'))
+			b.send(require('./fixtures/jade-requires')).node(done)
 	})
 
 	// I don't need this atm
-	it.skip('should work with inherited templates', function (done) {
+	it.skip('should work with inherited templates', function(done){
 		var p = base + 'inherit.js'
 		build.include(p)
 		build.run(function (code, next) {
