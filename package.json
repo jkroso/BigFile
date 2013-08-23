@@ -1,6 +1,6 @@
 {
   "name": "bigfile",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Turn a mapping of modules into a browser suitable package",
   "keywords": [
     "build",
@@ -18,12 +18,12 @@
     "when": "http://github.com/jkroso/when/tarball/3.3.1",
     "map": "http://github.com/jkroso/map/tarball/0.2.6",
     "detective": "2.1.2",
-    "uglify-js": "~2.3.6",
+    "uglify-js": "~2.4.0",
     "commander": "2.0.0",
-    "stylus": "~0.32.1",
+    "stylus": "~0.37.0",
     "falafel": "0.2.1",
     "result": "0.3.3",
-    "jade": "~0.33.0",
+    "jade": "~0.35.0",
     "colors": "0.6.0-1",
     "source-map": "~0.1.29"
   },
@@ -38,10 +38,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/jkroso/Big File.git"
+    "url": "git://github.com/jkroso/BigFile.git"
   },
   "bugs": {
-    "url": "https://github.com/jkroso/Big File/issues"
+    "url": "https://github.com/jkroso/BigFile/issues"
   },
   "license": "MIT"
 }
