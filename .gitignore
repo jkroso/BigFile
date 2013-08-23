@@ -2,3 +2,5 @@
 *.sublime-project
 *.sublime-workspace
 test/tmp/file.js
+example/out.js
+example/index.html
