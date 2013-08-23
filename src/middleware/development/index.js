@@ -25,6 +25,7 @@ module.exports = function(files){
 		src += '"' + path + '": function(module,exports,require){\n' + text + '\n},'
 		var lines = countLines(text)
 		var line = 0
+		debugger;
 		while (line++ < lines) {
 			sourcemap.addMapping({
 				source: path,
@@ -35,8 +36,7 @@ module.exports = function(files){
 		cursor += lines + 1
 	})
 	return src.slice(0, -1) + '},'
-		+ json(mapAliases(files))
-		+ ')("' + this.entry + '")'
+		+ json(mapAliases(files)) + ')\n'
 		+ inlineSourcemap(sourcemap)
 }
 

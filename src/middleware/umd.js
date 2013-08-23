@@ -9,13 +9,11 @@
  */
 
 module.exports = function(code){
-  return umd(this.name, this.entry, code)
-}
-
-function umd(name, entryPath, code){
+  var name = this.name
+  var entry = this.entry
   return [
       "!function(context, definition){"
-    , "  if (typeof require == 'function' && typeof exports == 'object' && typeof module == 'object') {"
+    , "  if (typeof require == 'function' && typeof exports == 'object') {"
     , "    module.exports = definition()"
     , "  } else if (typeof define == 'function' && typeof define.amd  == 'object') {"
     , "    define(definition)"
@@ -23,7 +21,7 @@ function umd(name, entryPath, code){
     , "    " + (name == 'null' || name == null ? "" : "context['"+name+"'] = ") + "definition()"
     , "  }"
     , "}(this, function(){"
-    , "  return " + code.replace(/\r/g, '')
+    , "  return " + code.replace(/\r/g, '').replace(/\n(.*)$/, "('" + entry + "')\n$1")
     , "})"
     , ""
   ].join('\n')

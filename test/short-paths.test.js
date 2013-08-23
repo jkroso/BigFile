@@ -6,22 +6,17 @@ var chai = require('./chai')
 
 describe('short-paths middleware', function(){
 	it('should produce runnable output', function(done){
-		var build = new Build('shortPaths')
-		build.entry = '/path/to/racks/index.js'
-		build
+		new Build('shortPaths', '/path/to/rack/index.js')
 			.use('transform')
 			.use('short-paths')
 			.use('development')
+			.use('umd')
 			.use(function(code, next){
 				// fs.writeFileSync(__dirname+'/tmp/file.js', code)
 				var a = {}
 				vm.runInNewContext(code, a)
-				expect(a).to.have.property('modules')
-					.that.is.an('object')
-				expect(a).to.have.property('require')
+				expect(a).to.have.property('shortPaths')
 					.that.is.a('function')
-				expect(a.require('/rack/index.js'))
-					.to.be.be.a('function')
 			}).send(clone(require('./fixtures/nodeish')))
 				.node(done)
 	})

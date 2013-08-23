@@ -25,7 +25,7 @@ describe('development middleware', function(build){
 
 	it('should support relative paths', function(done){
 		build.use(function(code){
-			var ret = vm.runInNewContext(code+';require(\'/a\')')
+			var ret = vm.runInNewContext(code+'\n(\'/a\')')
 			expect(ret).to.deep.equal({
 				has_dependency: true,
 				dependency: {
@@ -38,7 +38,7 @@ describe('development middleware', function(build){
 
 	it('should support npm style packages', function(done){
 		build.use(function(code, next){
-			code += ';require(\'/expandindex\')'
+			code += '\n(\'/expandindex\')'
 			// uncomment if you want to try running the code in a browser
 			// write(__dirname+'/tmp/file.js', code)
 			var ret = vm.runInNewContext(code)
@@ -55,7 +55,7 @@ describe('development middleware', function(build){
 
 	it('should support remote paths', function(done){
 		build.use(function(code){
-			code += ';require(\'/remote\')'
+			code += '\n(\'/remote\')'
 			// write(__dirname+'/tmp/file.js', code)
 			var ret = vm.runInNewContext(code)
 			expect(ret).to.exist
@@ -68,7 +68,7 @@ describe('development middleware', function(build){
 	describe('aliased modules', function(){
 		it('basic case', function(done){
 			build.use(function(code){
-				code += ';require("/expandindex")'
+				code += '\n("/expandindex")'
 				// write(__dirname+'/tmp/file.js', code)
 				var ret = vm.runInNewContext(code)
 				expect(ret).to.exist
@@ -79,7 +79,7 @@ describe('development middleware', function(build){
 
 		it('requiring from aliased files', function(done){
 			build.use(function(code){
-				code += ';require("/project/index.js")'
+				code += '\n("/project/index.js")'
 				// write(__dirname+'/tmp/file.js', code)
 				var ret = vm.runInNewContext(code)
 				expect(ret).to.eql({a:{b:{c:true}}})

@@ -5,7 +5,7 @@ var chai = require('./chai')
   , vm = require('vm')
 
 var file = require.resolve('../bin/_bigfile')
-var entry = require.resolve('../example/simple/simple')
+var entry = require.resolve('../example/simple')
 
 describe('cli', function (build) {
 	it('should produce runable code', function (done) {
