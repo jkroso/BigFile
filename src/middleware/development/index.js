@@ -17,31 +17,31 @@ module.exports = function(files){
 		file: this.entry
 	})
 	var src = prelude.replace(/.$/, '{\n')
-	var cursor = countLines(src)
+	var cursor = newLines(src) + 1
 	files.forEach(function(file){
 		var text = file.text
 		var path = file.path
 		sourcemap.setSourceContent(path, text)
 		src += '"' + path + '": function(module,exports,require){\n' + text + '\n},'
-		var lines = countLines(text)
+		var lines = newLines(text)
 		var line = 0
-		debugger;
-		while (line++ < lines) {
+		while (line++ <= lines) {
 			sourcemap.addMapping({
 				source: path,
 				original: { line: line, column: 0 },
 				generated: { line: line + cursor, column: 0 }
 			})
 		}
-		cursor += lines + 1
+		cursor += lines + 2
 	})
 	return src.slice(0, -1) + '},'
 		+ json(mapAliases(files)) + ')\n'
 		+ inlineSourcemap(sourcemap)
 }
 
-function countLines(str){
-	return str.split(/\n/).length
+function newLines(str){
+	var m = str.match(/\n/g)
+	return m ? m.length : 0
 }
 
 function inlineSourcemap(map){

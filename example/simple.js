@@ -1,21 +1,12 @@
 var Build = require('..')
 var fs = require('fs')
 
-var files = [
-	{
-		path: '/a/b/index.js',
-		text: 'var text = require(\'./c\')\nvar end = "!"\nconsole.log(text + end)'
-	},
-	{
-		path: '/a/b/c.js',
-		text: 'module.exports = "hello world!"'
-	}
-];
+var files = require('./in.json');
 
 new Build('simple', '/a/b')
 	.use('transform')
 	.use('development')
-	.use('umd')
+	.use('invoke')
 	.send(files)
 	.read(function(code){
 		console.log(code)
