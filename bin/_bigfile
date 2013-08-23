@@ -116,29 +116,12 @@ function build(){
       console.warn('install middleware: %s'.blue, middleware)
       build.use(middleware)
     })
-  }
-  // else if (program.production) {
-  //   build.use(
-  //     'filter',
-  //     'transform',
-  //     'production'
-  //   )
-  //   if (program.umd) {
-  //     build.use('umd')
-  //   } else {
-  //     build.use('global')
-  //   }
-  //   build.use('compress')
-  // } 
-  else {
+  } else {
     build.use('transform')
     if (!program.leavePaths) build.use('quick-path-shorten')
     build.use('development')
-    build.use('umd')
-    if (program.compress) {
-      // Will only compress the require implementation
-      build.use('compress')
-    }
+    build.use('invoke')
+    if (program.compress) build.use('compress')
   }
 
   program.plugins && program.plugins.forEach(function (plugin) {

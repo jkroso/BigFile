@@ -12,15 +12,14 @@ describe('cli', function (build) {
 		var child = spawn(file, ['-x', 'test'], {stdio: ['pipe', 'pipe', 'pipe']})
 		var code = ''
 		child.stdout.on('data', function(d){
-				code += d
-			}).on('end', function(){
-				write(__dirname+'/tmp/file.js', code)
-				var a = {}
-				vm.runInNewContext(code, a)
-				a.should.have.property('test')
-					.that.is.a('function')
-				done()
-			})
+			code += d
+		}).on('end', function(){
+			// write(__dirname+'/tmp/file.js', code)
+			var a = {}
+			expect(vm.runInNewContext(code, a)).to.be.a('function')
+			Object.keys(a).should.have.a.lengthOf(0)
+			done()
+		})
 		child.stderr.on('data', function(d){
 			// silence normal info logs
 			if ((d+'').length > 31) console.log(d+'')
