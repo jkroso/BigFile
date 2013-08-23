@@ -15,16 +15,17 @@
     "debug": "http://github.com/jkroso/debug/tarball/0.7.3",
     "winner": "http://github.com/jkroso/winner/tarball/0.3.2",
     "path": "http://github.com/jkroso/path/tarball/1.1.0",
-    "when": "http://github.com/jkroso/when/tarball/3.2.4",
+    "when": "http://github.com/jkroso/when/tarball/3.3.1",
     "map": "http://github.com/jkroso/map/tarball/0.2.6",
     "detective": "2.1.2",
     "uglify-js": "~2.3.6",
-    "commander": "1.2.0",
+    "commander": "2.0.0",
     "stylus": "~0.32.1",
     "falafel": "0.2.1",
-    "result": "0.3.1",
+    "result": "0.3.3",
     "jade": "~0.33.0",
-    "colors": "0.6.0-1"
+    "colors": "0.6.0-1",
+    "source-map": "~0.1.29"
   },
   "devDependencies": {
     "chai": "~1.7.2",

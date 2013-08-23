@@ -1,23 +1,21 @@
+(function(modules, aliases){
 
 /**
- * give each module an identity
+ * init each module
  */
 
 for (var file in modules) {
-	modules[file] = {
-		source: modules[file],
-		loaded: false,
-		exports: {}
-	}
+	modules[file].loaded = false
+	modules[file].exports = {}
+	modules[file].functor = modules[file]
 }
 
 /**
- * add aliases to the module map
+ * add aliases
  */
 
 for (var alias in aliases) {
-	if (alias in modules) continue
-	modules[alias] = modules[aliases[alias]] 
+	if (!(alias in modules)) modules[alias] = modules[aliases[alias]]
 }
 
 /**
@@ -28,9 +26,7 @@ for (var alias in aliases) {
  * @return {Any} module.exports
  */
 
-function require (path, parent){
-	parent || (parent = '/')
-
+function require(path, parent){
 	var fullpath = resolve(parent, path)
 	if (!fullpath) throw Error('failed to require '+path+' from '+parent)
 	if (fullpath in aliases) fullpath = aliases[fullpath]
@@ -38,29 +34,13 @@ function require (path, parent){
 
 	if (!module.loaded) {
 		module.loaded = true
-		Function(
-			'module',
-			'exports',
-			'require',
-			// sourceURL tells the browser we are evaling a file
-			module.source + '\n//@ sourceURL=' + encodeURI(prettyPath(fullpath))
-		).call(module.exports, module, module.exports,
-			// relative `require` function
-			function(path){
-				var base = dirname(fullpath)
-				if (path[0] == '.') path = join(base, path)
-				return require(path, base)
-			}
-		)
+		var base = dirname(fullpath)
+		module.call(module.exports, module, module.exports, function(path){
+			if (path[0] == '.') path = join(base, path)
+			return require(path, base)
+		})
 	}
 	return module.exports
-}
-
-function prettyPath(path){
-	if (/github\.com\/([^\/]+)\/([^\/]+)\/tarball\/([^\/]+)\/(.*)/.test(path)) {
-		return RegExp.$1+'/'+RegExp.$2+'@'+RegExp.$3 + '/' + RegExp.$4
-	}
-	return path
 }
 
 /**
@@ -72,7 +52,7 @@ function prettyPath(path){
  * @api private
  */
 
-function resolve (base, path) {
+function resolve(base, path){
 	// absolute
 	if (/^\/|(?:\w+:\/\/)/.test(path)) {
 		return complete(path)
@@ -185,8 +165,13 @@ function completions(path){
  * @return {String} full path of the module
  */
 
-function complete(path) {
+function complete(path){
 	return completions(path).filter(function (path) {
 		return path in modules
 	})[0]
 }
+
+return function(path){
+	return require(path, '/')
+}
+})()

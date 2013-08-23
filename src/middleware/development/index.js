@@ -1,11 +1,8 @@
 
+var SourceMap = require('source-map/lib/source-map/source-map-generator').SourceMapGenerator
 var read = require('fs').readFileSync
 
-/*!
- * Load run time source
- */
-
-var requireCode = read(__dirname+'/require.js', 'utf-8')
+var prelude = read(__dirname+'/require.js', 'utf-8')
 
 /**
  * Wrap a mapping of modules with the environment required to run them
@@ -15,31 +12,41 @@ var requireCode = read(__dirname+'/require.js', 'utf-8')
  * @return {String}
  */
 
-module.exports = function (files) {
-	return [
-		'var modules = ' + json(mapFiles(files)),
-		'',
-		'var aliases = ' + json(mapAliases(files)),
-		requireCode,
-	].join('\n')
+module.exports = function(files){
+	var sourcemap = new SourceMap({
+		file: this.entry
+	})
+	var src = prelude.replace(/.$/, '{\n')
+	var cursor = countLines(src)
+	files.forEach(function(file){
+		var text = file.text
+		var path = file.path
+		sourcemap.setSourceContent(path, text)
+		src += '"' + path + '": function(module,exports,require){\n' + text + '\n},'
+		var lines = countLines(text)
+		var line = 0
+		while (line++ < lines) {
+			sourcemap.addMapping({
+				source: path,
+				original: { line: line, column: 0 },
+				generated: { line: line + cursor, column: 0 }
+			})
+		}
+		cursor += lines + 1
+	})
+	return src.slice(0, -1) + '},'
+		+ json(mapAliases(files))
+		+ ')("' + this.entry + '")'
+		+ inlineSourcemap(sourcemap)
 }
 
-function json(obj){
-	return JSON.stringify(obj, null, 2)
+function countLines(str){
+	return str.split(/\n/).length
 }
 
-/**
- * map real path to their text
- * 
- * @param {Array} files
- * @return {Object}
- */
-
-function mapFiles(files){
-	return files.reduce(function(map, file){
-		map[file.path] = file.text
-		return map
-	}, {})
+function inlineSourcemap(map){
+	return '//# sourceMappingURL=data:application/json;base64,'
+		+ new Buffer(map.toString()).toString('base64')
 }
 
 /**
@@ -57,4 +64,8 @@ function mapAliases(files){
 			return map
 		}, map)
 	}, {})
+}
+
+function json(obj){
+	return JSON.stringify(obj, null, 2)
 }

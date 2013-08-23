@@ -1,5 +1,6 @@
 
 var debug = require('debug')('bigfile')
+var coerce = require('when/coerce')
 var when = require('when')
 
 module.exports = Build
@@ -91,11 +92,11 @@ Build.prototype.send = function(files){
 	var trans = this._transformations.slice(1)
 	var fn = this._transformations[0]
 	var self = this
-	return trans.reduce(function(res, fn){
+	return coerce(trans.reduce(function(res, fn){
 		return when(res, function(arg){
 			return fn.call(self, arg)
 		})
-	}, fn.call(this, this._extraFiles.concat(files)))
+	}, fn.call(this, this._extraFiles.concat(files))))
 }
 
 /**

@@ -14,7 +14,7 @@ module.exports = function(code){
 
 function umd(name, entryPath, code){
   return [
-      "!function (context, definition) {"
+      "!function(context, definition){"
     , "  if (typeof require == 'function' && typeof exports == 'object' && typeof module == 'object') {"
     , "    module.exports = definition()"
     , "  } else if (typeof define == 'function' && typeof define.amd  == 'object') {"
@@ -22,13 +22,8 @@ function umd(name, entryPath, code){
     , "  } else {"
     , "    " + (name == 'null' || name == null ? "" : "context['"+name+"'] = ") + "definition()"
     , "  }"
-    , "}(this, function () {"
-     // indent and remove carriage returns
-    , code.replace(/^/mg, '  ').replace(/\r/g, '')
-    , (name == 'require'
-        ? "  return require"
-        : "  return require("+JSON.stringify(entryPath)+")"
-      )
+    , "}(this, function(){"
+    , "  return " + code.replace(/\r/g, '')
     , "})"
     , ""
   ].join('\n')
