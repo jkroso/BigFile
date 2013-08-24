@@ -18,6 +18,9 @@ module.exports = function(files){
 	})
 	var src = prelude.replace(/.$/, '{\n')
 	var cursor = newLines(src) + 1
+	if (typeof this.offsetScript == 'number') {
+		cursor += this.offsetScript
+	}
 	files.forEach(function(file){
 		var text = file.text
 		var path = file.path

@@ -1,6 +1,6 @@
 {
   "name": "bigfile",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Turn a mapping of modules into a browser suitable package",
   "keywords": [
     "build",
@@ -21,11 +21,11 @@
     "uglify-js": "~2.4.0",
     "commander": "2.0.0",
     "stylus": "~0.37.0",
-    "falafel": "0.2.1",
+    "falafel": "0.3.1",
     "result": "0.3.3",
     "jade": "~0.35.0",
     "colors": "0.6.0-1",
-    "source-map": "~0.1.29"
+    "source-map": "0.1.29"
   },
   "devDependencies": {
     "chai": "~1.7.2",
