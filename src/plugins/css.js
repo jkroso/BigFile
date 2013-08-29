@@ -6,19 +6,17 @@ function transform(file){
 }
 
 transform.test = function(file){
-	return (/\.css$/).test(file.path)
-		? 1
-		: 0
+	return Number((/\.css$/).test(file.path))
 }
 
 exports.dependencies = [
 	{
 		path: '/node_modules/css-install.js',
 		text: [
-			'module.exports = function (text) {',
+			'module.exports = function(text){',
 			'	var style = document.createElement(\'style\')',
 			'	style.appendChild(document.createTextNode(text))',
-			'	document.getElementsByTagName(\'head\')[0].appendChild(style)',
+			'	document.head.appendChild(style)',
 			'}'
 		].join('\n')
 	}
