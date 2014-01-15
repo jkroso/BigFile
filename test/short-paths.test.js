@@ -1,5 +1,5 @@
 var chai = require('./chai')
-  , clone = require('clone-component')
+  , clone = require('clone')
   , Build = require('..')
   , vm = require('vm')
   , fs = require('fs')

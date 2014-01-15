@@ -1,6 +1,6 @@
 
 var chai = require('./chai')
-  , clone = require('clone-component')
+  , clone = require('clone')
   , write = require('fs').writeFileSync
   , Build = require('..')
   , vm = require('vm')

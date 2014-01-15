@@ -11,8 +11,7 @@ function transform(file, options){
 		return ''
 	})
 
-	var fn = jade.compile(text, {
-			client: true,
+	var fn = jade.compileClient(text, {
 			compileDebug: options && options.debug,
 			filename: file.path,
 			pretty: false

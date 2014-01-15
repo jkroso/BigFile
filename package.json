@@ -1,47 +1,34 @@
 {
   "name": "bigfile",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "Turn a mapping of modules into a browser suitable package",
-  "keywords": [
-    "build",
-    "compile",
-    "module",
-    "js",
-    "cjs",
-    "package"
-  ],
+  "keywords": ["build", "compile", "module", "cjs", "package"],
   "author": "Jakeb Rosoman",
   "dependencies": {
-    "debug": "http://github.com/jkroso/debug/tarball/0.7.3",
-    "winner": "http://github.com/jkroso/winner/tarball/0.3.2",
-    "path": "http://github.com/jkroso/path/tarball/1.1.0",
-    "when": "http://github.com/jkroso/when/tarball/3.3.1",
-    "map": "http://github.com/jkroso/map/tarball/0.2.6",
+    "winner": "jkroso/winner#0.3.2",
+    "debug": "jkroso/debug#0.7.3",
+    "path": "jkroso/path#1.1.0",
+    "map": "jkroso/map#0.2.10",
+    "source-map": "0.1.31",
+    "uglify-js": "~2.4.8",
     "detective": "2.1.2",
-    "uglify-js": "~2.4.0",
-    "commander": "2.0.0",
-    "stylus": "~0.37.0",
-    "falafel": "0.3.1",
-    "result": "0.3.3",
-    "jade": "~0.35.0",
+    "commander": "2.1.0",
     "colors": "0.6.0-1",
-    "source-map": "0.1.29"
+    "falafel": "0.3.1",
+    "result": "~0.4.6",
+    "stylus": "*",
+    "jade": "*"
   },
   "devDependencies": {
-    "chai": "~1.7.2",
-    "mocha": "~1.12.0",
-    "clone-component": "http://github.com/jkroso/clone/tarball/0.2.1"
+    "clone": "jkroso/clone#0.3.0",
+    "mocha": "~1.17.0",
+    "chai": "~1.8.1"
   },
   "bin": {
     "bigfile": "bin/bigfile",
     "_bigfile": "bin/_bigfile"
   },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/jkroso/BigFile.git"
-  },
-  "bugs": {
-    "url": "https://github.com/jkroso/BigFile/issues"
-  },
+  "repository": "git://github.com/jkroso/BigFile.git",
+  "bugs": "https://github.com/jkroso/BigFile/issues",
   "license": "MIT"
 }

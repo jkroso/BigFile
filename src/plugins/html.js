@@ -2,10 +2,6 @@
 
 exports.handlers = [ html ]
 
-/**
- * The do nothing handler
- */
-
 function html(file){
 	file.text = 'module.exports = ' + JSON.stringify(file.text)
 	return file
