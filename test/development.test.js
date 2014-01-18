@@ -1,5 +1,5 @@
 
-var chai = require('./chai') 
+var chai = require('./chai')
   , write = require('fs').writeFileSync
   , Build = require('..')
   , vm = require('vm')
@@ -19,8 +19,16 @@ describe('development middleware', function(build){
 				.and.include('function join')
 				.and.include('function normalize')
 				.and.include('exports.simple = true')
-		}).send(require('./fixtures/simple'))
-			.node(done)
+		}).send(require('./fixtures/simple')).node(done)
+	})
+
+	it('should produce consistent output', function(done){
+		var files = require('./fixtures/simple')
+		build.send(files).then(function(a){
+			return build.send(files.slice().reverse()).then(function(b){
+				a.should.equal(b)
+			})
+		}).node(done)
 	})
 
 	it('should support relative paths', function(done){

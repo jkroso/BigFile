@@ -21,6 +21,10 @@ module.exports = function(files){
 	if (typeof this.offsetScript == 'number') {
 		cursor += this.offsetScript
 	}
+
+	// sort for consistent output
+	files.sort(function(a, b){ return b.path < a.path })
+
 	files.forEach(function(file){
 		var text = file.text
 		var path = file.path
@@ -54,7 +58,7 @@ function inlineSourcemap(map){
 
 /**
  * map aliases to their real paths
- * 
+ *
  * @param {Array} files
  * @return {Object}
  */
