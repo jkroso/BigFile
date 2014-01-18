@@ -1,6 +1,6 @@
 {
   "name": "bigfile",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Turn a mapping of modules into a browser suitable package",
   "keywords": ["build", "compile", "module", "cjs", "package"],
   "author": "Jakeb Rosoman",
