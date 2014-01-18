@@ -23,7 +23,11 @@ module.exports = function(files){
   }
 
   // sort for consistent output
-  files.sort(function(a, b){ return b.path < a.path })
+  files.sort(function(a, b){
+    if (b.path < a.path) return 1
+    if (b.path > a.path) return -1
+    return 0
+  })
 
   files.forEach(function(file){
     var text = file.text
