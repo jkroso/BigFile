@@ -7,8 +7,8 @@
  */
 
 module.exports = function(files, next){
-	return files.reduce(function(o, next){
-		o[next.path] = next.text
-		return o
-	}, {})
+  return files.reduce(function(o, next){
+    o[next.path] = next.text
+    return o
+  }, {})
 }

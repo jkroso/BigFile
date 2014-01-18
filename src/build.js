@@ -14,21 +14,21 @@ module.exports = Build
  */
 
 function Build (name, entry) {
-	this._handlers = []
-	this._extraFiles = []
-	this._transformations = []
-	this.entry = entry || ''
-	this.name = name === null 
-		? null 
-		: (name || 'myProject')
-	this.options = {
-		debug: true,
-		min: {
-			compress: false,
-			beautify: true,
-			leaveAst: false
-		}
-	}
+  this._handlers = []
+  this._extraFiles = []
+  this._transformations = []
+  this.entry = entry || ''
+  this.name = name === null 
+    ? null 
+    : (name || 'myProject')
+  this.options = {
+    debug: true,
+    min: {
+      compress: false,
+      beautify: true,
+      leaveAst: false
+    }
+  }
 }
 
 /**
@@ -39,8 +39,8 @@ function Build (name, entry) {
  */
 
 Build.prototype.debug = function (bool) {
-	this.options.debug = bool !== false
-	return this
+  this.options.debug = bool !== false
+  return this
 }
 
 /**
@@ -52,21 +52,21 @@ Build.prototype.debug = function (bool) {
  */
 
 Build.prototype.handle = function (re, fn) {
-	function transform(file){
-		return fn(file)
-	}
-	transform.test = function(file){
-		return re.test(file.path) ? 1 : 0
-	}
-	this._handlers.push(transform)
-	return this
+  function transform(file){
+    return fn(file)
+  }
+  transform.test = function(file){
+    return re.test(file.path) ? 1 : 0
+  }
+  this._handlers.push(transform)
+  return this
 }
 
 Build.prototype.minify = function(opts){
-	this.options.min = opts === false 
-		? false 
-		: merge(this.options.min, opts || {})
-	return this
+  this.options.min = opts === false 
+    ? false 
+    : merge(this.options.min, opts || {})
+  return this
 }
 
 /**
@@ -77,12 +77,12 @@ Build.prototype.minify = function(opts){
  */
 
 Build.prototype.use = function(fn){
-	if (typeof fn === 'string') {
-		debug('loading middleware: %s', fn)
-		fn = require(__dirname+'/middleware/'+fn)
-	}
-	this._transformations.push(fn)
-	return this
+  if (typeof fn === 'string') {
+    debug('loading middleware: %s', fn)
+    fn = require(__dirname+'/middleware/'+fn)
+  }
+  this._transformations.push(fn)
+  return this
 }
 
 /**
@@ -90,12 +90,12 @@ Build.prototype.use = function(fn){
  */
 
 Build.prototype.send = function(files){
-	var trans = this._transformations.slice(1)
-	var fn = this._transformations[0]
-	var self = this
-	return coerce(trans.reduce(function(res, fn){
-		return when.call(self, res, fn)
-	}, fn.call(this, this._extraFiles.concat(files))))
+  var trans = this._transformations.slice(1)
+  var fn = this._transformations[0]
+  var self = this
+  return coerce(trans.reduce(function(res, fn){
+    return when.call(self, res, fn)
+  }, fn.call(this, this._extraFiles.concat(files))))
 }
 
 /**
@@ -106,23 +106,23 @@ Build.prototype.send = function(files){
  */
 
 Build.prototype.plugin = function(plug){
-	if (typeof plug === 'string') {
-		debug('Loading plugin: %s', plug)
-		plug = require(__dirname+'/plugins/'+plug)
-	}
+  if (typeof plug === 'string') {
+    debug('Loading plugin: %s', plug)
+    plug = require(__dirname+'/plugins/'+plug)
+  }
 
-	if ('handlers' in plug) {
-		this._handlers = this._handlers.concat(plug.handlers)
-	}
-	
-	// TODO: this should be a deep merge
-	plug.options && merge(this.options, plug.options)
+  if ('handlers' in plug) {
+    this._handlers = this._handlers.concat(plug.handlers)
+  }
+  
+  // TODO: this should be a deep merge
+  plug.options && merge(this.options, plug.options)
 
-	if (plug.dependencies) {
-		this._extraFiles = this._extraFiles.concat(plug.dependencies)
-	}
+  if (plug.dependencies) {
+    this._extraFiles = this._extraFiles.concat(plug.dependencies)
+  }
 
-	return this
+  return this
 }
 
 /*!
@@ -130,8 +130,8 @@ Build.prototype.plugin = function(plug){
  */
 
 function merge(a, b){
-	for (var prop in b) {
-		a[prop] = b[prop]
-	}
-	return a
+  for (var prop in b) {
+    a[prop] = b[prop]
+  }
+  return a
 }

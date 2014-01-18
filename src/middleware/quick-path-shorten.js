@@ -12,38 +12,38 @@ var commonDir = require('path/common')
  */
 
 module.exports = function(files){
-	// treat packin packages as top level node_modules
-	chop(files, new RegExp('^'+process.env.HOME+'/.packin/-'), '/node_modules')
+  // treat packin packages as top level node_modules
+  chop(files, new RegExp('^'+process.env.HOME+'/.packin/-'), '/node_modules')
 
-	// extract paths
-	var paths = files
-		.reduce(function(paths, file){
-			paths.push(file.path)
-			if (file.aliases) return paths.concat(file.aliases)
-			return paths
-		}, [])
-		// ignore top level deps
-		.filter(function (path) {
-			return !(/^\/node_modules\//).test(path)
-		})
+  // extract paths
+  var paths = files
+    .reduce(function(paths, file){
+      paths.push(file.path)
+      if (file.aliases) return paths.concat(file.aliases)
+      return paths
+    }, [])
+    // ignore top level deps
+    .filter(function (path) {
+      return !(/^\/node_modules\//).test(path)
+    })
 
-	var dir = commonDir(paths)
-	debug('excess path = %s', dir)
+  var dir = commonDir(paths)
+  debug('excess path = %s', dir)
 
-	// Nothing we can do
-	if (dir === '/') return files
-	
-	dir = new RegExp('^'+dir)
-	chop(files, dir)
+  // Nothing we can do
+  if (dir === '/') return files
+  
+  dir = new RegExp('^'+dir)
+  chop(files, dir)
 
-	if (typeof this.entry != 'string') {
-		throw new Error('short-paths requires an `entry` property')
-	}
+  if (typeof this.entry != 'string') {
+    throw new Error('short-paths requires an `entry` property')
+  }
 
-	// Update the entry path 
-	this.entry = this.entry.replace(dir, '')
+  // Update the entry path 
+  this.entry = this.entry.replace(dir, '')
 
-	return files
+  return files
 }
 
 /**
@@ -55,14 +55,14 @@ module.exports = function(files){
  */
 
 function chop(files, regex, add){
-	add || (add = '')
-	files.forEach(function (file) {
-		file.path = file.path.replace(regex, add)
-		var aliases = file.aliases
-		if (aliases && aliases.length) {
-			file.aliases = aliases.map(function(path){
-				return path.replace(regex, add)
-			})
-		}
-	})
+  add || (add = '')
+  files.forEach(function (file) {
+    file.path = file.path.replace(regex, add)
+    var aliases = file.aliases
+    if (aliases && aliases.length) {
+      file.aliases = aliases.map(function(path){
+        return path.replace(regex, add)
+      })
+    }
+  })
 }

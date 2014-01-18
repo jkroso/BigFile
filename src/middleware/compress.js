@@ -10,9 +10,9 @@ var minify = require('../utils').minify
  */
 
 module.exports = function(code){
-	return minify(code, {
-		compress: true,
-		beautify: false,
-		leaveAst: false
-	})
+  return minify(code, {
+    compress: true,
+    beautify: false,
+    leaveAst: false
+  })
 }

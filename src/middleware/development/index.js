@@ -13,47 +13,47 @@ var prelude = read(__dirname+'/require.js', 'utf-8')
  */
 
 module.exports = function(files){
-	var sourcemap = new SourceMap({
-		file: this.entry
-	})
-	var src = prelude.replace(/.$/, '{\n')
-	var cursor = newLines(src) + 1
-	if (typeof this.offsetScript == 'number') {
-		cursor += this.offsetScript
-	}
+  var sourcemap = new SourceMap({
+    file: this.entry
+  })
+  var src = prelude.replace(/.$/, '{\n')
+  var cursor = newLines(src) + 1
+  if (typeof this.offsetScript == 'number') {
+    cursor += this.offsetScript
+  }
 
-	// sort for consistent output
-	files.sort(function(a, b){ return b.path < a.path })
+  // sort for consistent output
+  files.sort(function(a, b){ return b.path < a.path })
 
-	files.forEach(function(file){
-		var text = file.text
-		var path = file.path
-		sourcemap.setSourceContent(path, text)
-		src += '"' + path + '": function(module,exports,require){\n' + text + '\n},'
-		var lines = newLines(text)
-		var line = 0
-		while (line++ <= lines) {
-			sourcemap.addMapping({
-				source: path,
-				original: { line: line, column: 0 },
-				generated: { line: line + cursor, column: 0 }
-			})
-		}
-		cursor += lines + 2
-	})
-	return src.slice(0, -1) + '},'
-		+ json(mapAliases(files)) + ')\n'
-		+ inlineSourcemap(sourcemap)
+  files.forEach(function(file){
+    var text = file.text
+    var path = file.path
+    sourcemap.setSourceContent(path, text)
+    src += '"' + path + '": function(module,exports,require){\n' + text + '\n},'
+    var lines = newLines(text)
+    var line = 0
+    while (line++ <= lines) {
+      sourcemap.addMapping({
+        source: path,
+        original: { line: line, column: 0 },
+        generated: { line: line + cursor, column: 0 }
+      })
+    }
+    cursor += lines + 2
+  })
+  return src.slice(0, -1) + '},'
+    + json(mapAliases(files)) + ')\n'
+    + inlineSourcemap(sourcemap)
 }
 
 function newLines(str){
-	var m = str.match(/\n/g)
-	return m ? m.length : 0
+  var m = str.match(/\n/g)
+  return m ? m.length : 0
 }
 
 function inlineSourcemap(map){
-	return '//# sourceMappingURL=data:application/json;base64,'
-		+ new Buffer(map.toString()).toString('base64')
+  return '//# sourceMappingURL=data:application/json;base64,'
+    + new Buffer(map.toString()).toString('base64')
 }
 
 /**
@@ -64,15 +64,15 @@ function inlineSourcemap(map){
  */
 
 function mapAliases(files){
-	return files.reduce(function(map, file){
-		if (!('aliases' in file)) return map
-		return file.aliases.reduce(function(map, alias){
-			map[alias] = file.path
-			return map
-		}, map)
-	}, {})
+  return files.reduce(function(map, file){
+    if (!('aliases' in file)) return map
+    return file.aliases.reduce(function(map, alias){
+      map[alias] = file.path
+      return map
+    }, map)
+  }, {})
 }
 
 function json(obj){
-	return JSON.stringify(obj, null, 2)
+  return JSON.stringify(obj, null, 2)
 }

@@ -7,11 +7,11 @@ exports.handlers = [ js ]
  */
 
 function js(a){
-	return a
+  return a
 }
 
 js.test = function(file){
-	return (/\.js$/).test(file.path)
-		? 1
-		: 0
+  return (/\.js$/).test(file.path)
+    ? 1
+    : 0
 }

@@ -5,9 +5,9 @@
  */
 
 for (var file in modules) {
-	modules[file].loaded = false
-	modules[file].exports = {}
-	modules[file].functor = modules[file]
+  modules[file].loaded = false
+  modules[file].exports = {}
+  modules[file].functor = modules[file]
 }
 
 /**
@@ -15,7 +15,7 @@ for (var file in modules) {
  */
 
 for (var alias in aliases) {
-	if (!(alias in modules)) modules[alias] = modules[aliases[alias]]
+  if (!(alias in modules)) modules[alias] = modules[aliases[alias]]
 }
 
 /**
@@ -27,20 +27,20 @@ for (var alias in aliases) {
  */
 
 function require(path, parent){
-	var fullpath = resolve(parent, path)
-	if (!fullpath) throw Error('failed to require '+path+' from '+parent)
-	if (fullpath in aliases) fullpath = aliases[fullpath]
-	var module = modules[fullpath]
+  var fullpath = resolve(parent, path)
+  if (!fullpath) throw Error('failed to require '+path+' from '+parent)
+  if (fullpath in aliases) fullpath = aliases[fullpath]
+  var module = modules[fullpath]
 
-	if (!module.loaded) {
-		module.loaded = true
-		var base = dirname(fullpath)
-		module.call(module.exports, module, module.exports, function(path){
-			if (path[0] == '.') path = join(base, path)
-			return require(path, base)
-		})
-	}
-	return module.exports
+  if (!module.loaded) {
+    module.loaded = true
+    var base = dirname(fullpath)
+    module.call(module.exports, module, module.exports, function(path){
+      if (path[0] == '.') path = join(base, path)
+      return require(path, base)
+    })
+  }
+  return module.exports
 }
 
 /**
@@ -53,21 +53,21 @@ function require(path, parent){
  */
 
 function resolve(base, path){
-	// absolute
-	if (/^\/|(?:\w+:\/\/)/.test(path)) {
-		return complete(path)
-	} else if (/^\./.test(path)) {
-		// todo: fix join for urls
-		return complete(join(base, path))
-	}
+  // absolute
+  if (/^\/|(?:\w+:\/\/)/.test(path)) {
+    return complete(path)
+  } else if (/^\./.test(path)) {
+    // todo: fix join for urls
+    return complete(join(base, path))
+  }
 
-	// walk up looking in node_modules
-	while (true) {
-		var res = complete(join(base, 'node_modules', path))
-		if (res) return res
-		if (base == '/' || base == '.') break
-		base = dirname(base)
-	}
+  // walk up looking in node_modules
+  while (true) {
+    var res = complete(join(base, 'node_modules', path))
+    if (res) return res
+    if (base == '/' || base == '.') break
+    base = dirname(base)
+  }
 }
 
 /**
@@ -78,9 +78,9 @@ function resolve(base, path){
  */
 
 function dirname(path){
-	var i = path.lastIndexOf('/')
-	if (i < 0) return '.'
-	return path.slice(0, i) || '/'
+  var i = path.lastIndexOf('/')
+  if (i < 0) return '.'
+  return path.slice(0, i) || '/'
 }
 
 /**
@@ -124,9 +124,9 @@ function normalize(path){
  */
 
 function join(path){
-	for (var i = 1, len = arguments.length; i < len; i++) {
-		path += '/' + arguments[i]
-	}
+  for (var i = 1, len = arguments.length; i < len; i++) {
+    path += '/' + arguments[i]
+  }
   return normalize(path)
 }
 
@@ -139,23 +139,23 @@ function join(path){
  */
 
 function completions(path){
-	// A directory
-	if (path.match(/\/$/)) {
-		return [
-			path+'index.js',
-			path+'index.json',
-			path+'package.json'
-		]
-	}
-	// could be a directory or a file
-	return [
-		path,
-		path+'.js',
-		path+'.json',
-		path+'/index.js',
-		path+'/index.json',
-		path+'/package.json'
-	]
+  // A directory
+  if (path.match(/\/$/)) {
+    return [
+      path+'index.js',
+      path+'index.json',
+      path+'package.json'
+    ]
+  }
+  // could be a directory or a file
+  return [
+    path,
+    path+'.js',
+    path+'.json',
+    path+'/index.js',
+    path+'/index.json',
+    path+'/package.json'
+  ]
 }
 
 /**
@@ -166,12 +166,12 @@ function completions(path){
  */
 
 function complete(path){
-	return completions(path).filter(function (path) {
-		return path in modules
-	})[0]
+  return completions(path).filter(function (path) {
+    return path in modules
+  })[0]
 }
 
 return function(path){
-	return require(path, '/')
+  return require(path, '/')
 }
 })()

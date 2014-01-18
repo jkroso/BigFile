@@ -7,5 +7,5 @@
  */
 
 module.exports = function(code){
-	return code.replace(/\n(.*)$/, '("'+ this.entry + '")\n$1')
+  return code.replace(/\n(.*)$/, '("'+ this.entry + '")\n$1')
 }

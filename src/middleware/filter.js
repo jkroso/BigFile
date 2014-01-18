@@ -8,16 +8,16 @@ var debug = require('debug')('filter')
  */
 
 module.exports = function (files, next) {
-	var exclude = this._excludes
+  var exclude = this._excludes
 
-	files = files.filter(function (file) {
-		return !exclude.some(function (re) {
-			if (re.test(file.path)) {
-				debug('Excluding %s since it matches %s', file.path, re)
-				return true
-			}
-		})
-	})
+  files = files.filter(function (file) {
+    return !exclude.some(function (re) {
+      if (re.test(file.path)) {
+        debug('Excluding %s since it matches %s', file.path, re)
+        return true
+      }
+    })
+  })
 
-	next(files)
+  next(files)
 }

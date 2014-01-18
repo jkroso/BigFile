@@ -22,65 +22,65 @@ var requireCode = read(__dirname+'/require.js', 'utf-8')
  */
 
 module.exports = function (files, next) {
-	var self = this
-	var dict = {}
-	  , entry
+  var self = this
+  var dict = {}
+    , entry
 
-	files.forEach(function (file, i) {
-		file.index = i
-		file.text = simpleCompress(file.text)
-		dict[file.path] = file
-	})
+  files.forEach(function (file, i) {
+    file.index = i
+    file.text = simpleCompress(file.text)
+    dict[file.path] = file
+  })
 
-	if (this.entry == null) 
-		throw new Error('Production build needs an .entry defined')
+  if (this.entry == null) 
+    throw new Error('Production build needs an .entry defined')
 
-	// Set the entry to its index instead of its path
-	this.entry = dict[this.entry].index
+  // Set the entry to its index instead of its path
+  this.entry = dict[this.entry].index
 
-	// Replace paths with index's
-	files = files.map(function (file) {
-		return falafel(file.text, function (node) {
-			if (isRequire(node)) {
-				var name = node.arguments[0].value
+  // Replace paths with index's
+  files = files.map(function (file) {
+    return falafel(file.text, function (node) {
+      if (isRequire(node)) {
+        var name = node.arguments[0].value
 
-				if (name == null) {
-					debug('Dynamic require detected: %s at %s#%d',
-						node.source(),
-						file.path,
-						file.text.slice(0, node.range[0]).split('\n').length)
-					throw new Error('Dynamic requires are not possible in optimised builds')
-				}
+        if (name == null) {
+          debug('Dynamic require detected: %s at %s#%d',
+            node.source(),
+            file.path,
+            file.text.slice(0, node.range[0]).split('\n').length)
+          throw new Error('Dynamic requires are not possible in optimised builds')
+        }
 
-				var path = self.graph.resolveInternal(dirname(file.path), name)
-				
-				if (!path) throw new Error(name+' could not be found from '+file.path)
-				if (!dict[path]) throw new Error(name+' should not of resolved to '+path)
-				
-				node.update('require('+dict[path].index+')')
-			}
-		}).toString()
-	})
+        var path = self.graph.resolveInternal(dirname(file.path), name)
+        
+        if (!path) throw new Error(name+' could not be found from '+file.path)
+        if (!dict[path]) throw new Error(name+' should not of resolved to '+path)
+        
+        node.update('require('+dict[path].index+')')
+      }
+    }).toString()
+  })
 
-	var code = [
-		requireCode,
-		'var modules = ' + JSON.stringify(files)
-	].join('\n')
+  var code = [
+    requireCode,
+    'var modules = ' + JSON.stringify(files)
+  ].join('\n')
 
-	next(minify(code, {
-		compress: true,
-		beautify: false,
-		leaveAst: false
-	}))
+  next(minify(code, {
+    compress: true,
+    beautify: false,
+    leaveAst: false
+  }))
 
-	/*!
-	 * Test if an AST node is a call to "require"
-	 */
-	function isRequire (node) {
-		return node.type === 'CallExpression'
-			&& (node = node.callee).type === 'Identifier'
-			&& node.name === 'require'
-	}
+  /*!
+   * Test if an AST node is a call to "require"
+   */
+  function isRequire (node) {
+    return node.type === 'CallExpression'
+      && (node = node.callee).type === 'Identifier'
+      && node.name === 'require'
+  }
 }
 
 /**
@@ -90,15 +90,15 @@ module.exports = function (files, next) {
  * @return {String}
  */
 function simpleCompress (src) {
-	return minify(src, {
-		compress: true,
-		beautify: false,
-		// I don't like what uglify does with the ast from 
-		// a runtime performance perspective. Perhaps I
-		// should disable it ast tricks. For now I'll trust 
-		// uglify knows what it is doing
-		leaveAst: false
-	})
+  return minify(src, {
+    compress: true,
+    beautify: false,
+    // I don't like what uglify does with the ast from 
+    // a runtime performance perspective. Perhaps I
+    // should disable it ast tricks. For now I'll trust 
+    // uglify knows what it is doing
+    leaveAst: false
+  })
 }
 
 /**
@@ -112,22 +112,22 @@ function simpleCompress (src) {
  */
 
 function compressModule (src) {
-	// has to have a side effect otherwise uglify is so damn smart it'll go
-	// hey this code doesn't even expose anything useful and just return an 
-	// empty string. In this case the side effect is that it generates a 
-	// global variable `a`. The reason I am using a function wrapper is to
-	// prevent uglify treating all variables used within the function as global
-	// and therefore not shortening their name. Perhaps there is a better way
-	var fn = 'function a(module,exports,require){'+src+'}'
-	fn = minify(fn, {
-		compress: true,
-		beautify: false,
-		leaveAst: false
-	})
-	fn.replace(extractCode, function (_, module, exports, require, code) {
-		// I should be adjusting the internal
-		return code
-	})
+  // has to have a side effect otherwise uglify is so damn smart it'll go
+  // hey this code doesn't even expose anything useful and just return an 
+  // empty string. In this case the side effect is that it generates a 
+  // global variable `a`. The reason I am using a function wrapper is to
+  // prevent uglify treating all variables used within the function as global
+  // and therefore not shortening their name. Perhaps there is a better way
+  var fn = 'function a(module,exports,require){'+src+'}'
+  fn = minify(fn, {
+    compress: true,
+    beautify: false,
+    leaveAst: false
+  })
+  fn.replace(extractCode, function (_, module, exports, require, code) {
+    // I should be adjusting the internal
+    return code
+  })
 }
 
 var extractCode = /^function a\((\w+),(\w+),(\w+)\)\{(.*)\}$/
