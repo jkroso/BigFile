@@ -1,12 +1,11 @@
 [
   {
-    "path": "/a/b/index.js",
-    "text": "var text = require('./c')\nvar end = '!'\nconsole.log(text + end)",
-    "parents": []
+    "id": "/a/b/index.js",
+    "source": "require('./sym')\nvar text = require('./c')\nvar end = '!'\nconsole.log(text + end)"
   },
   {
-    "path": "/a/b/c.js",
-    "text": "module.exports = 'hello world!'",
-    "parents": []
+    "id": "/a/b/c.js",
+    "source": "module.exports = 'hello world!'",
+    "aliases": ["/a/b/sym"]
   }
 ]

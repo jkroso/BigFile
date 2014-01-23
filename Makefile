@@ -1,14 +1,9 @@
-REPORTER=dot
 
 test: node_modules
-	@node_modules/.bin/mocha \
-		--reporter $(REPORTER) \
-		--slow 100 \
-		--bail \
-		test/*.test.js
+	@node_modules/hydro/bin/hydro test/*.test.js \
+		--setup test/hydro.conf.js
 
 node_modules: package.json
-	@npm i
-	@touch node_modules
+	@packin install --folder node_modules --meta $<
 
 .PHONY: test

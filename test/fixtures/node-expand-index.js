@@ -1,10 +1,10 @@
 module.exports = [
   {
-    "path": "/expandindex/index.js",
-    "text": "exports.foo = require('foo')"
+    "id": "/expandindex/index.js",
+    "source": "exports.foo = require('foo')"
   },
   {
-    "path": "/node_modules/foo/index.js",
-    "text": "exports.bar = 'baz';"
+    "id": "/node_modules/foo/index.js",
+    "source": "exports.bar = 'baz';"
   }
 ]

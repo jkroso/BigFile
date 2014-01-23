@@ -1,33 +1,22 @@
 {
   "name": "bigfile",
-  "version": "0.7.4",
+  "version": "0.8.0",
   "description": "Turn a mapping of modules into a browser suitable package",
   "keywords": ["build", "compile", "module", "cjs", "package"],
-  "author": "Jakeb Rosoman",
+  "author": "Jake Rosoman",
   "dependencies": {
-    "winner": "jkroso/winner#0.3.2",
-    "debug": "jkroso/debug#0.7.3",
-    "path": "jkroso/path#1.1.0",
-    "map": "jkroso/map#0.2.10",
     "source-map": "0.1.31",
-    "uglify-js": "~2.4.8",
-    "detective": "2.1.2",
-    "commander": "2.1.0",
-    "colors": "0.6.0-1",
-    "falafel": "0.3.1",
-    "result": "~0.4.6",
-    "stylus": "*",
-    "jade": "*"
+    "commander": "2.1.0"
   },
   "devDependencies": {
-    "clone": "jkroso/clone#0.3.0",
-    "mocha": "~1.17.0",
-    "chai": "~1.8.1"
+    "hydro-focus": "*",
+    "hydro-chai": "*",
+    "hydro-dot": "*",
+    "hydro-bdd": "*",
+    "hydro": "*",
+    "chai": "*"
   },
-  "bin": {
-    "bigfile": "bin/bigfile",
-    "_bigfile": "bin/_bigfile"
-  },
+  "bin": {"bigfile": "bin/bigfile"},
   "repository": "git://github.com/jkroso/BigFile.git",
   "bugs": "https://github.com/jkroso/BigFile/issues",
   "license": "MIT"

@@ -1,20 +1,20 @@
 module.exports = [
   {
-    "path": "/project/index.js",
-    "text": "exports.a = require('b');require('./sym');"
+    "id": "/project/index.js",
+    "source": "exports.a = require('b');require('./sym');"
   },
   {
-    "path": "/a/b.js",
-    "text": "\'b\'",
+    "id": "/a/b.js",
+    "source": "\'b\'",
     "aliases": [ "/project/sym" ]
   },
   {
-    "path": "/a/b/index.js",
-    "text": "exports.b = require('./c.js')",
+    "id": "/a/b/index.js",
+    "source": "exports.b = require('./c.js')",
     "aliases": [ "/node_modules/b.js" ]
   },
   {
-    "path": "/a/b/c.js",
-    "text": "exports.c = true"
+    "id": "/a/b/c.js",
+    "source": "exports.c = true"
   }
 ]
