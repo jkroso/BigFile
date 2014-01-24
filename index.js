@@ -17,7 +17,7 @@ module.exports = function(files, offset){
   var entry = files[0].id
   var sourcemap = new SourceMap({ file: entry })
   var cursor = lines + (offset || 0)
-  var src = prelude
+  var src = prelude + '(['
 
   // sort for consistent output
   files.sort(function(a, b){
@@ -29,8 +29,13 @@ module.exports = function(files, offset){
   files.forEach(function(file){
     var text = file.source
     var path = file.id
+
+    src += '\n"' + path + '", function(module,exports,require){\n'
+      + text
+      + '\n}, ' + JSON.stringify(file.deps) + ','
+    cursor += 1
+
     sourcemap.setSourceContent(path, text)
-    src += '"' + path + '": function(module,exports,require){\n' + text + '\n},'
     var lines = newLines(text)
     var line = 0
     while (line++ <= lines) {
@@ -43,8 +48,7 @@ module.exports = function(files, offset){
     cursor += lines + 2
   })
 
-  return src.replace(/,$/, '},')
-    + json(aliases(files)) + ')'
+  return src + '])'
     + '("' + entry + '")\n'
     + inlineSourcemap(sourcemap)
 }
@@ -57,25 +61,4 @@ function newLines(str){
 function inlineSourcemap(map){
   return '//# sourceMappingURL=data:application/json;base64,'
     + new Buffer(map.toString()).toString('base64')
-}
-
-/**
- * map aliases to their real paths
- *
- * @param {Array} files
- * @return {Object}
- */
-
-function aliases(files){
-  return files.reduce(function(map, file){
-    var aliases = file.aliases || []
-    for (var i = 0, len = aliases.length; i < len; i++) {
-      map[aliases[i]] = file.id
-    }
-    return map
-  }, {})
-}
-
-function json(obj){
-  return JSON.stringify(obj, null, 2)
 }

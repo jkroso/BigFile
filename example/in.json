@@ -1,11 +1,16 @@
 [
   {
     "id": "/a/b/index.js",
-    "source": "require('./sym')\nvar text = require('./c')\nvar end = '!'\nconsole.log(text + end)"
+    "source": "require('./sym')\nvar text = require('./c')\nvar end = '!'\nconsole.log(text + end)",
+    "deps": {
+      "./sym": "/a/b/c.js",
+      "./c": "/a/b/c.js"
+    }
   },
   {
     "id": "/a/b/c.js",
-    "source": "module.exports = 'hello world!'",
-    "aliases": ["/a/b/sym"]
+    "source": "require('./')\nmodule.exports = 'hello world!'",
+    "aliases": ["/a/b/sym"],
+    "deps": {"./":"/a/b/index.js"}
   }
 ]
