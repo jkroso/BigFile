@@ -6,11 +6,7 @@ var vm = require('vm')
 var base = __dirname + '/fixtures'
 
 it('should compile to a string', function(){
-  build(require('./fixtures/simple')).should
-    .include('function completions')
-    .include('function join')
-    .include('function normalize')
-    .include('exports.simple = true')
+  build(require('./fixtures/simple')).should.include('exports.simple = true')
 })
 
 it('should produce consistent output', function(){
@@ -37,16 +33,8 @@ it('should support npm style packages', function(){
   expect(ret).to.eql({foo:{bar:'baz'}})
 })
 
-describe('aliased modules', function(){
-  it('basic case', function(){
-    var code = build(require('./fixtures/aliases'))
-    var ret = vm.runInNewContext(code)
-    expect(ret).to.exist.and.have.property('foo')
-  })
-
-  it('requiring from aliased files', function(){
-    var code = build(require('./fixtures/alias2'))
-    var ret = vm.runInNewContext(code)
-    expect(ret).to.eql({a:{b:{c:true}}})
-  })
+it('aliased modules', function(){
+  var code = build(require('./fixtures/aliases'))
+  var ret = vm.runInNewContext(code)
+  expect(ret).to.eql({a:{b:{c:true}}})
 })

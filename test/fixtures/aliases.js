@@ -1,16 +1,24 @@
 module.exports = [
   {
-    "id": "/expandindex/index.js",
-    "source": "exports.foo = require('bar');require('./sym');"
+    "id": "/project/index.js",
+    "source": "exports.a = require('b');require('./sym');",
+    "deps": {'b':'/a/b/index.js', './sym': '/a/b.js'}
   },
   {
-    "id": "/expandindex/b",
+    "id": "/a/b.js",
     "source": "\'b\'",
-    "aliases": [ "/expandindex/sym" ]
+    "aliases": [ "/project/sym" ],
+    "deps": {}
   },
   {
-    "id": "/node_modules/foo/index.js",
-    "source": "exports.bar = 'baz';",
-    "aliases": [ "/node_modules/bar.js" ]
+    "id": "/a/b/index.js",
+    "source": "exports.b = require('./c.js')",
+    "aliases": [ "/node_modules/b.js" ],
+    "deps": {'./c.js': '/a/b/c.js'}
+  },
+  {
+    "id": "/a/b/c.js",
+    "source": "exports.c = true",
+    "deps": {}
   }
 ]

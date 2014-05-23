@@ -16,5 +16,5 @@ it('should produce runable code', function(done){
     done()
   })
   child.stderr.on('data', done)
-  child.stdin.end(JSON.stringify(require('./fixtures/alias2')))
+  child.stdin.end(JSON.stringify(require('./fixtures/aliases')))
 })
