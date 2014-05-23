@@ -30,7 +30,7 @@ module.exports = function(files, offset){
     var text = file.source
     var path = file.id
 
-    src += '\n"' + path + '", function(module,exports,require){\n'
+    src += '\n"' + path + '", function(module,exports,__filename,__dirname,require){\n'
       + text
       + '\n}, ' + JSON.stringify(file.deps) + ','
     cursor += 1

@@ -38,3 +38,9 @@ it('aliased modules', function(){
   var ret = vm.runInNewContext(code)
   expect(ret).to.eql({a:{b:{c:true}}})
 })
+
+it('__dirname', function(){
+  var code = build(require('./fixtures/dirname'))
+  var ret = vm.runInNewContext(code)
+  expect(ret).to.eql({d: '/a', f: '/a/b.js'})
+})

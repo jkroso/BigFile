@@ -7,8 +7,9 @@
     var deps = modules[i++]
     cache[id] = {
       exports: {},
+      filename: id,
       deps: deps,
-      fn: fn
+      fn: fn,
     }
   }
 
@@ -25,7 +26,9 @@
     var m = cache[id]
     if (!m.loaded) {
       m.loaded = true
-      m.fn.call(m.exports, m, m.exports, function(path){
+      var f = m.filename
+      var d = f.split('/').slice(0,-1).join('/')
+      m.fn.call(m.exports, m, m.exports, f, d, function(path){
         return require(path, id)
       })
     }
