@@ -19,6 +19,7 @@
     "chai": "*"
   },
   "bin": {"bigfile": "bin/bigfile"},
+  "files": ["bin", "index.js", "prelude.js"],
   "repository": "git://github.com/jkroso/BigFile.git",
   "bugs": "https://github.com/jkroso/BigFile/issues",
   "license": "MIT"
