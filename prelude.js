@@ -14,6 +14,7 @@
   }
 
   function require(dep, parent){
+    if (dep in cache) return load(dep)
     var deps = cache[parent].deps
     var id = deps[dep]
     if (id in cache) return load(id)
