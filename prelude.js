@@ -1,4 +1,5 @@
 (function(modules){
+  var window = this
   var cache = {}
 
   for (var i = 0; i < modules.length;) {
@@ -29,7 +30,7 @@
       m.loaded = true
       var f = m.filename
       var d = f.split('/').slice(0,-1).join('/')
-      m.fn.call(m.exports, m, m.exports, f, d, function(path){
+      m.fn.call(m.exports, m, m.exports, f, d, window, function(path){
         return require(path, id)
       })
     }

@@ -1,12 +1,12 @@
 {
   "name": "bigfile",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Turn a mapping of modules into a browser suitable package",
   "keywords": ["build", "compile", "module", "cjs", "package"],
   "author": "Jake Rosoman",
   "dependencies": {
-    "source-map": "^0.1.33",
-    "commander": "^2.2.0"
+    "source-map": "0.4",
+    "commander": "2"
   },
   "devDependencies": {
     "hydro-file-suite": "*",
